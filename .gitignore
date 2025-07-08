@@ -69,3 +69,5 @@ Pipfile.lock
 
 # MacOS
 .DS_Store 
+.env
+*.pem
