@@ -30,7 +30,7 @@ python3 quizs/pow.py -n deweizhai
 Or use the provided Makefile target:
 
 ```bash
-make hw1
+make qz1
 ```
 
 ## RSA Encryption and Signing (Quiz 2)
@@ -56,8 +56,8 @@ python3 quizs/pow.py -n deweizhai -z 4 | python3 quizs/encrypt_decrypt.py
 Or use the provided Makefile targets:
 
 ```bash
-make hw2    # General pipeline execution
-make quiz2  # Specific Quiz 2 requirements (POW with 4 zeros + RSA signing)
+make      # General pipeline execution
+make qz2  # Specific Quiz 2 requirements (POW with 4 zeros + RSA signing)
 ```
 
 ### Environment Variables

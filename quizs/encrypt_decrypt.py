@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
 """
 https://decert.me/challenge/45779e03-7905-469e-822e-3ec3746d9ece
-Quiz2:
-Practice asymmetric encryption RSA (programming language not limited):
+Quiz #2: Practice asymmetric encryption RSA (programming language not limited):
 
 First generate a public-private key pair
 Use the private key to sign "nickname + nonce" that has a hash value starting with 4 zeros (POW)
@@ -12,8 +11,8 @@ import logging
 import sys
 
 from argparse import ArgumentParser
-
-from utils import load_dotenv, get_or_create_key_pair, sign_message, verify_message
+from dotenv import load_dotenv
+from utils import get_or_create_key_pair, sign_message, verify_message
 
 
 load_dotenv()
@@ -32,7 +31,6 @@ def run():
     """
     Main function
     """
-    load_dotenv()
     args = parse_args()
     # Get the nickname_with_nonce from args or stdin
     if args.nickname_with_nonce:

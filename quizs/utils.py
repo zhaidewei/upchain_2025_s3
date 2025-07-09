@@ -2,12 +2,6 @@ import os
 import logging
 from typing import Tuple
 import rsa
-from dotenv import load_dotenv as _load_dotenv
-
-
-def load_dotenv():
-    _load_dotenv()
-    return os.environ
 
 
 def contains_leading_zeros(text: str, num_zeros: int) -> bool:

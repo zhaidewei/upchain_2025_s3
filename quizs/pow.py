@@ -19,7 +19,8 @@ import time
 import logging
 from argparse import ArgumentParser
 from timeout_function_decorator import timeout
-from utils import load_dotenv, contains_leading_zeros
+from dotenv import load_dotenv
+from utils import contains_leading_zeros
 
 
 load_dotenv()
