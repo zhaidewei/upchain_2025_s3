@@ -12,7 +12,7 @@ import sys
 
 from argparse import ArgumentParser
 from dotenv import load_dotenv
-from utils import get_or_create_key_pair, sign_message, verify_message
+from utils import get_or_create_key_pair, sign_message, verify_message, contains_leading_zeros, hash_function
 
 
 load_dotenv()
@@ -42,6 +42,10 @@ def run():
         if not nickname_with_nonce:
             logging.error("No input received from stdin")
             sys.exit(1)
+    hash_value = hash_function(nickname_with_nonce)
+    if not contains_leading_zeros(hash_value, 4):
+        logging.error("Nickname+nonce does not have 4 leading zeros")
+        sys.exit(1)
     private_key, public_key = get_or_create_key_pair()
     message = nickname_with_nonce
     signature = sign_message(private_key, message)

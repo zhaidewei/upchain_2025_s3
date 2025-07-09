@@ -14,24 +14,18 @@ Submit your program via a link to your GitHub repository.
 """
 import os
 import sys
-import hashlib
 import time
 import logging
 from argparse import ArgumentParser
 from timeout_function_decorator import timeout
 from dotenv import load_dotenv
-from utils import contains_leading_zeros
+from utils import contains_leading_zeros, hash_function
 
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
 MAX_SEARCH_TIME = int(os.getenv("MAX_SEARCH_TIME", 600))  # 10 minutes in seconds
-
-
-def hash_function(input_text: str) -> str:
-    """Simple sha 256 hash function"""
-    return hashlib.sha256(input_text.encode()).hexdigest()
 
 
 def parse_args():

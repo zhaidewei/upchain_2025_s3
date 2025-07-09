@@ -1,8 +1,12 @@
 import os
 import logging
 from typing import Tuple
+import hashlib
 import rsa
 
+def hash_function(input_text: str) -> str:
+    """Simple sha 256 hash function"""
+    return hashlib.sha256(input_text.encode()).hexdigest()
 
 def contains_leading_zeros(text: str, num_zeros: int) -> bool:
     """
