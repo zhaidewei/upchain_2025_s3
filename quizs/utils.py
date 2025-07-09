@@ -3,6 +3,12 @@ import logging
 from typing import Tuple
 import hashlib
 import rsa
+from dotenv import load_dotenv as _load_dotenv
+
+
+def load_dotenv():
+    _load_dotenv()
+    return os.environ
 
 def hash_function(input_text: str) -> str:
     """Simple sha 256 hash function"""

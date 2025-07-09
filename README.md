@@ -124,6 +124,27 @@ A `.flake8` configuration file is included to customize linting rules:
 - E501 (line too long) errors are disabled
 - Common directories are excluded from linting
 
+## Testing
+The project includes comprehensive unit tests for all utility functions.
+
+### Running Tests
+```bash
+make test
+```
+
+Or run directly:
+```bash
+cd quizs && python3 -m unittest test_utils.py -v
+```
+
+### Test Coverage
+The test suite covers:
+- **Hash Function**: Basic functionality, edge cases, unicode support
+- **Leading Zeros Detection**: Various input scenarios and edge cases
+- **RSA Functions**: Key generation, signing, verification, and error handling
+- **Key Management**: File operations, environment variables, directory creation
+- **Integration**: Complete POW to RSA workflow
+
 ## Dependencies
 - `rsa`: For RSA cryptographic operations
 - `python-dotenv`: For environment variable management
