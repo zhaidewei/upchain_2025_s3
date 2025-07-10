@@ -5,3 +5,36 @@ repos:
     rev: 7.0.0
     hooks:
       - id: flake8
+
+  # Solidity linting
+  - repo: local
+    hooks:
+      - id: solhint
+        name: Solidity Linter (solhint)
+        entry: bash -c 'cd solidity_quiz && npm run lint:sol'
+        language: system
+        files: \.sol$
+        pass_filenames: false
+
+      - id: solidity-compile
+        name: Solidity Compile Check
+        entry: bash -c 'cd solidity_quiz && npm run compile'
+        language: system
+        files: \.sol$
+        pass_filenames: false
+
+  # General file formatting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: mixed-line-ending
+        args: ['--fix=lf']

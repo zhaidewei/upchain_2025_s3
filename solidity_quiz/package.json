@@ -1,0 +1,35 @@
+{
+  "name": "bank-contract",
+  "version": "1.0.0",
+  "description": "A simple Bank smart contract with deposit tracking and admin withdrawal functionality",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:coverage": "hardhat coverage",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "node": "hardhat node",
+    "clean": "hardhat clean",
+    "lint:sol": "solhint 'contracts/**/*.sol' '*.sol'",
+    "lint:sol:fix": "solhint 'contracts/**/*.sol' '*.sol' --fix"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart-contracts",
+    "hardhat",
+    "bank",
+    "defi"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.17.0",
+    "solhint": "^4.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
