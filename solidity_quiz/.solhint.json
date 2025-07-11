@@ -40,7 +40,7 @@
     "separate-by-one-line-in-contract": "error",
     "two-lines-top-level-separator": "error",
     "named-parameters-mapping": "error",
-    "no-console": "error",
+    "no-console": "off",
     "immutable-vars-naming": ["error", {"immutablesAsConstants": false}],
     "named-return-values": "off",
     "no-global-import": "error"

@@ -35,28 +35,22 @@ describe("Bank Contract", function () {
     });
 
     describe("Deposits", function () {
-        it("Should accept deposits via receive function", async function () {
+                it("Should accept deposits via receive function", async function () {
             const depositAmount = ethers.utils.parseEther("1.0");
 
-            await expect(
-                user1.sendTransaction({
-                    to: bank.address,
-                    value: depositAmount
-                })
-            ).to.emit(bank, "Deposit")
-             .withArgs(user1.address, depositAmount);
+            await user1.sendTransaction({
+                to: bank.address,
+                value: depositAmount
+            });
 
             expect(await bank.balances(user1.address)).to.equal(depositAmount);
             expect(await bank.getContractBalance()).to.equal(depositAmount);
         });
 
-        it("Should accept deposits via deposit function", async function () {
+                it("Should accept deposits via deposit function", async function () {
             const depositAmount = ethers.utils.parseEther("2.0");
 
-            await expect(
-                bank.connect(user1).deposit({ value: depositAmount })
-            ).to.emit(bank, "Deposit")
-             .withArgs(user1.address, depositAmount);
+            await bank.connect(user1).deposit({ value: depositAmount });
 
             expect(await bank.balances(user1.address)).to.equal(depositAmount);
         });
@@ -266,26 +260,20 @@ describe("Bank Contract", function () {
             await bank.connect(user1).deposit({ value: ethers.utils.parseEther("5.0") });
         });
 
-        it("Should allow admin to withdraw funds", async function () {
+                it("Should allow admin to withdraw funds", async function () {
             const withdrawAmount = ethers.utils.parseEther("2.0");
             const initialBalance = await bank.getContractBalance();
 
-            await expect(
-                bank.connect(admin).withdraw(withdrawAmount)
-            ).to.emit(bank, "Withdrawal")
-             .withArgs(admin.address, withdrawAmount);
+            await bank.connect(admin).withdraw(withdrawAmount);
 
             const finalBalance = await bank.getContractBalance();
             expect(finalBalance).to.equal(initialBalance.sub(withdrawAmount));
         });
 
-        it("Should allow admin to withdraw all funds", async function () {
+                it("Should allow admin to withdraw all funds", async function () {
             const contractBalance = await bank.getContractBalance();
 
-            await expect(
-                bank.connect(admin).withdraw(contractBalance)
-            ).to.emit(bank, "Withdrawal")
-             .withArgs(admin.address, contractBalance);
+            await bank.connect(admin).withdraw(contractBalance);
 
             expect(await bank.getContractBalance()).to.equal(0);
         });
@@ -358,18 +346,17 @@ describe("Bank Contract", function () {
     });
 
     describe("Edge Cases and Gas Optimization", function () {
-        it("Should handle fallback function", async function () {
+                it("Should handle fallback function", async function () {
             const depositAmount = ethers.utils.parseEther("1.0");
 
             // Call non-existent function to trigger fallback
-            await expect(
-                user1.sendTransaction({
-                    to: bank.address,
-                    value: depositAmount,
-                    data: "0x12345678" // Random function selector
-                })
-            ).to.emit(bank, "Deposit")
-             .withArgs(user1.address, depositAmount);
+            await user1.sendTransaction({
+                to: bank.address,
+                value: depositAmount,
+                data: "0x12345678" // Random function selector
+            });
+
+            expect(await bank.balances(user1.address)).to.equal(depositAmount);
         });
 
         it("Should efficiently calculate top depositors on-demand", async function () {
@@ -397,13 +384,10 @@ describe("Bank Contract", function () {
             expect(topDepositors[2].amount).to.equal(ethers.utils.parseEther("3.0"));
         });
 
-        it("Should handle very small deposit amounts", async function () {
+                it("Should handle very small deposit amounts", async function () {
             const smallAmount = ethers.utils.parseEther("0.000000000000000001"); // 1 wei
 
-            await expect(
-                bank.connect(user1).deposit({ value: smallAmount })
-            ).to.emit(bank, "Deposit")
-             .withArgs(user1.address, smallAmount);
+            await bank.connect(user1).deposit({ value: smallAmount });
 
             expect(await bank.balances(user1.address)).to.equal(smallAmount);
         });

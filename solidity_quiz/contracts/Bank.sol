@@ -26,10 +26,6 @@ contract Bank {
         uint256 amount;
     }
 
-    // 事件
-    event Deposit(address indexed depositor, uint256 amount);
-    event Withdrawal(address indexed admin, uint256 amount);
-
     // 修饰符：仅管理员可调用
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only admin can call this function");
@@ -62,8 +58,6 @@ contract Bank {
 
         // 更新用户余额
         balances[msg.sender] += msg.value;
-
-        emit Deposit(msg.sender, msg.value);
     }
 
     // 管理员提取资金
@@ -72,7 +66,6 @@ contract Bank {
         require(address(this).balance >= amount, "Insufficient contract balance");
 
         payable(admin).transfer(amount);
-        emit Withdrawal(admin, amount);
     }
 
     // 查看合约总余额
