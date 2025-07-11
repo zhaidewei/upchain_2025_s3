@@ -14,17 +14,17 @@ contract Bank {
     // 管理员地址
     address public admin;
 
-    // 记录每个地址的存款金额
-    mapping(address => uint256) public balances;
-
-    // 记录所有存款用户的地址
-    address[] public depositors;
-
     // 前3名存款用户结构体
     struct TopDepositor {
         address depositor;
         uint256 amount;
     }
+
+    // 记录每个地址的存款金额
+    mapping(address user => uint256 balance) public balances;
+
+    // 记录所有存款用户的地址
+    address[] public depositors;
 
     // 修饰符：仅管理员可调用
     modifier onlyAdmin() {

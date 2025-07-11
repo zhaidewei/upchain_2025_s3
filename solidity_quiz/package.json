@@ -1,26 +1,37 @@
 {
-  "name": "bank-contract",
-  "version": "1.0.0",
-  "description": "A simple Bank smart contract with deposit tracking and admin withdrawal functionality",
+  "name": "bigbank-contract-system",
+  "version": "2.0.0",
+  "description": "A comprehensive BigBank smart contract system with interfaces, inheritance, and administrative management",
   "main": "index.js",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
     "test:coverage": "hardhat coverage",
+    "test:bigbank": "hardhat test test/BigBank.test.js",
+    "test:verbose": "hardhat test --reporter spec",
+    "test:gas": "REPORT_GAS=true hardhat test",
     "deploy:local": "hardhat run scripts/deploy.js --network localhost",
     "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:bigbank": "hardhat run scripts/deploy.js",
     "node": "hardhat node",
     "clean": "hardhat clean",
     "lint:sol": "solhint 'contracts/**/*.sol' '*.sol'",
-    "lint:sol:fix": "solhint 'contracts/**/*.sol' '*.sol' --fix"
+    "lint:sol:fix": "solhint 'contracts/**/*.sol' '*.sol' --fix",
+    "verify:contracts": "hardhat compile && echo 'Contracts compiled successfully!'",
+    "demo": "hardhat run scripts/deploy.js --network hardhat",
+    "debug:deposit": "hardhat run scripts/debug-deposit.js",
+    "debug:balance": "hardhat run scripts/verify-balance.js --quick"
   },
   "keywords": [
     "solidity",
     "ethereum",
     "smart-contracts",
     "hardhat",
-    "bank",
-    "defi"
+    "bigbank",
+    "defi",
+    "inheritance",
+    "interfaces",
+    "admin-management"
   ],
   "author": "Your Name",
   "license": "MIT",

@@ -1,65 +1,108 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  console.log("Starting deployment...");
+    const [deployer, user1, user2, user3, adminOwner] = await ethers.getSigners();
 
-  // Get the deployer account
-  const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+    console.log("========================================");
+    console.log("BigBank Smart Contract System Deployment");
+    console.log("========================================");
+    console.log("Deployer address:", deployer.address);
+    console.log("Deployer balance:", ethers.utils.formatEther(await deployer.getBalance()));
 
-  // Get account balance
-  const balance = await deployer.getBalance();
-  console.log("Account balance:", ethers.utils.formatEther(balance), "ETH");
+    // 1. 部署BigBank合约
+    console.log("\n1. Deploying BigBank contract...");
+    const BigBank = await ethers.getContractFactory("BigBank");
+    const bigBank = await BigBank.deploy();
+    await bigBank.deployed();
+    console.log("BigBank deployed to:", bigBank.address);
+    console.log("BigBank admin:", await bigBank.admin());
 
-  // Deploy the Bank contract
-  console.log("\nDeploying Bank contract...");
-  const Bank = await ethers.getContractFactory("Bank");
-  const bank = await Bank.deploy();
+    // 2. 部署Admin合约
+    console.log("\n2. Deploying Admin contract...");
+    const Admin = await ethers.getContractFactory("Admin");
+    const admin = await Admin.deploy();
+    await admin.deployed();
+    console.log("Admin deployed to:", admin.address);
+    console.log("Admin owner:", await admin.owner());
 
-  await bank.deployed();
+    // 3. 将BigBank的管理员权限转移给Admin合约
+    console.log("\n3. Transferring BigBank admin rights to Admin contract...");
+    await bigBank.transferAdmin(admin.address);
+    console.log("BigBank new admin:", await bigBank.admin());
 
-  console.log("✅ Bank contract deployed successfully!");
-  console.log("📍 Contract address:", bank.address);
-  console.log("👤 Admin address:", deployer.address);
+    // 4. 模拟用户存款
+    console.log("\n4. Simulating user deposits...");
+    const depositAmount1 = ethers.utils.parseEther("0.005");
+    const depositAmount2 = ethers.utils.parseEther("0.003");
+    const depositAmount3 = ethers.utils.parseEther("0.008");
 
-  // Verify deployment
-  console.log("\nVerifying deployment...");
-  const admin = await bank.admin();
-  const contractBalance = await bank.getContractBalance();
+    await bigBank.connect(user1).deposit({ value: depositAmount1 });
+    console.log(`User1 deposited ${ethers.utils.formatEther(depositAmount1)} ETH`);
 
-  console.log("Contract admin:", admin);
-  console.log("Contract balance:", ethers.utils.formatEther(contractBalance), "ETH");
+    await bigBank.connect(user2).deposit({ value: depositAmount2 });
+    console.log(`User2 deposited ${ethers.utils.formatEther(depositAmount2)} ETH`);
 
-  // Save deployment info
-  const deploymentInfo = {
-    network: hre.network.name,
-    contractAddress: bank.address,
-    adminAddress: deployer.address,
-    deploymentTime: new Date().toISOString(),
-    blockNumber: await ethers.provider.getBlockNumber()
-  };
+    await bigBank.connect(user3).deposit({ value: depositAmount3 });
+    console.log(`User3 deposited ${ethers.utils.formatEther(depositAmount3)} ETH`);
 
-  console.log("\n📋 Deployment Summary:");
-  console.log("Network:", deploymentInfo.network);
-  console.log("Contract Address:", deploymentInfo.contractAddress);
-  console.log("Admin Address:", deploymentInfo.adminAddress);
-  console.log("Block Number:", deploymentInfo.blockNumber);
-  console.log("Deployment Time:", deploymentInfo.deploymentTime);
+    // 5. 查看合约状态
+    console.log("\n5. Checking contract state...");
+    console.log("BigBank contract balance:", ethers.utils.formatEther(await bigBank.getContractBalance()));
+    console.log("Number of depositors:", await bigBank.getDepositorsCount());
 
-  // Instructions for interaction
-  console.log("\n🚀 Next Steps:");
-  console.log("1. Users can deposit ETH by sending transactions to:", bank.address);
-  console.log("2. Admin can withdraw funds using the withdraw() function");
-  console.log("3. Check top depositors using getTopDepositors()");
-  console.log("4. View contract balance using getContractBalance()");
+    // 获取前3名存款用户
+    const topDepositors = await bigBank.getTopDepositors();
+    console.log("Top 3 depositors:");
+    for (let i = 0; i < topDepositors.length; i++) {
+        if (topDepositors[i].depositor !== ethers.constants.AddressZero) {
+            console.log(`  ${i + 1}. ${topDepositors[i].depositor}: ${ethers.utils.formatEther(topDepositors[i].amount)} ETH`);
+        }
+    }
 
-  return bank;
+    // 6. Admin提取资金
+    console.log("\n6. Admin withdrawing funds...");
+    console.log("Admin balance before:", ethers.utils.formatEther(await admin.getBalance()));
+
+    await admin.adminWithdraw(bigBank.address);
+
+    console.log("Admin balance after:", ethers.utils.formatEther(await admin.getBalance()));
+    console.log("BigBank balance after withdrawal:", ethers.utils.formatEther(await bigBank.getContractBalance()));
+
+    // 7. 验证最小存款限制
+    console.log("\n7. Testing minimum deposit requirement...");
+    try {
+        await bigBank.connect(user1).deposit({ value: ethers.utils.parseEther("0.0005") });
+        console.log("ERROR: Should have rejected small deposit!");
+    } catch (error) {
+        console.log("✓ Correctly rejected deposit below minimum (0.0005 ETH)");
+    }
+
+    // 8. 测试正确的最小存款
+    console.log("\n8. Testing valid minimum deposit...");
+    const minDeposit = ethers.utils.parseEther("0.001");
+    await bigBank.connect(user1).deposit({ value: minDeposit });
+    console.log(`✓ Successfully accepted minimum deposit of ${ethers.utils.formatEther(minDeposit)} ETH`);
+
+    console.log("\n========================================");
+    console.log("BigBank System Deployment Complete!");
+    console.log("========================================");
+
+    // 返回部署的合约地址
+    return {
+        bigBank: bigBank.address,
+        admin: admin.address,
+        deployer: deployer.address
+    };
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error("❌ Deployment failed:");
-    console.error(error);
-    process.exit(1);
-  });
+// 如果直接运行此脚本，执行main函数
+if (require.main === module) {
+    main()
+        .then(() => process.exit(0))
+        .catch((error) => {
+            console.error(error);
+            process.exit(1);
+        });
+}
+
+module.exports = { main };
