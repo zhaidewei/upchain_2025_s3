@@ -20,7 +20,11 @@
     "verify:contracts": "hardhat compile && echo 'Contracts compiled successfully!'",
     "demo": "hardhat run scripts/deploy.js --network hardhat",
     "debug:deposit": "hardhat run scripts/debug-deposit.js",
-    "debug:balance": "hardhat run scripts/verify-balance.js --quick"
+    "debug:balance": "hardhat run scripts/verify-balance.js --quick",
+    "admin:demo": "hardhat run scripts/admin-transfer.js --demo",
+    "admin:check": "hardhat run scripts/admin-transfer.js --check",
+    "test:abi": "hardhat run scripts/test-abi.js",
+    "test:staticcall": "hardhat run scripts/test-staticcall.js"
   },
   "keywords": [
     "solidity",
