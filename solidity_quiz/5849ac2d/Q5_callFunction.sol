@@ -28,7 +28,7 @@ contract Callee {
 
 contract Caller {
     function callSetValue(address callee, uint256 value) public payable returns (bool) {
-        (bool success, ) = payable(callee).call{value: value}(abi.encodeWithSelector(Callee.setValue.selector, value));
+        (bool success, ) = payable(callee).call{value: msg.value}(abi.encodeWithSelector(Callee.setValue.selector, value));
         require(success, "call function failed");
         return success;
     }
