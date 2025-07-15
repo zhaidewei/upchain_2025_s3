@@ -50,7 +50,7 @@ interface ITokenReceiver {
  */
 contract ExtendedERC20 is BaseERC20 {
 
-    constructor(string memory name, string memory symbol, uint8 decimals, uint256 totalSupply) BaseERC20(name, symbol, decimals, totalSupply) {}
+    constructor() BaseERC20() {}
 
     // 事件：带回调的转账, 写入到日志里
     event TransferWithCallback(address indexed from, address indexed to, uint256 value);
