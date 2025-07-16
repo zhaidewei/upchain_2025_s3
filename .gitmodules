@@ -1,0 +1,9 @@
+[submodule "lib/openzeppelin-contracts"]
+	path = lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "solidity_quiz/852f5836/usdc/usdc/lib/forge-std"]
+	path = solidity_quiz/852f5836/usdc/usdc/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "solidity_quiz/852f5836/usdc/usdc_imply/lib/forge-std"]
+	path = solidity_quiz/852f5836/usdc/usdc_imply/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
