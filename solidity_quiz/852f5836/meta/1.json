@@ -1,0 +1,15 @@
+{
+    "name": "Niuniu at sea",
+    "description": "My first NFT",
+    "image": "ipfs://bafybeibglr7a34u6eot4ktak3yypkk2uyty5c4s5mpz7smuzybzjhz57da",
+    "attributes": [
+      {
+        "trait_type": "Color",
+        "value": "Blue"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "Common"
+      }
+    ]
+  }
