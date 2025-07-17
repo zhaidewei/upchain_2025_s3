@@ -16,3 +16,9 @@
 [submodule "sol_quiz/852f5836_2/lib/openzeppelin-contracts"]
 	path = sol_quiz/852f5836_2/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "foundry_quiz/7bd246d8/lib/forge-std"]
+	path = foundry_quiz/7bd246d8/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "foundry_quiz/7bd246d8/lib/openzeppelin-contracts"]
+	path = foundry_quiz/7bd246d8/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
