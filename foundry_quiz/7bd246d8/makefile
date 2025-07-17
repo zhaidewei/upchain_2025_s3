@@ -1,4 +1,4 @@
-.PHONY: init_install dry-run
+.PHONY: init_install dry-run verify verify-contract
 
 init_install:
 	forge install OpenZeppelin/openzeppelin-contracts
@@ -23,3 +23,23 @@ deploy_via_script:
 	--account myMetaMaskAcc \
 	--password '' \
 	--broadcast
+
+verify:
+	@echo "Please provide the deployed contract address:"
+	@read CONTRACT_ADDRESS; \
+	forge verify-contract $$CONTRACT_ADDRESS \
+	src/Erc20Token.sol:MyToken \
+	--chain sepolia \
+	--constructor-args $$(cast abi-encode "constructor(string,string)" "MyToken" "MTK") \
+	--watch
+
+verify-contract:
+	@if [ -z "$(CONTRACT_ADDRESS)" ]; then \
+		echo "Usage: make verify-contract CONTRACT_ADDRESS=0x..."; \
+		exit 1; \
+	fi
+	forge verify-contract $(CONTRACT_ADDRESS) \
+	src/Erc20Token.sol:MyToken \
+	--chain sepolia \
+	--constructor-args $$(cast abi-encode "constructor(string,string)" "MyToken" "MTK") \
+	--watch
