@@ -1,0 +1,4 @@
+BankTest:testFuzz_Deposit(uint256) (runs: 257, μ: 123967, ~: 123967)
+BankTest:test_Admin() (gas: 13389)
+BankTest:test_OnlyAdminCanWithdraw() (gas: 196771)
+BankTest:test_Top3Depositors() (gas: 575945)
