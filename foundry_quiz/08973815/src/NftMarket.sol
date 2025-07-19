@@ -2,9 +2,9 @@
 pragma solidity 0.8.25;
 
 
-import {ExtendedERC20WithData} from "ExtendedERC20WithData.sol";
-import { ITokenReceiverWithData } from "Interfaces.sol";
-import { IERC721Receiver } from "Interfaces.sol";
+import {ExtendedERC20WithData} from "./ExtendedERC20WithData.sol";
+import { ITokenReceiverWithData } from "./Interfaces.sol";
+import { IERC721Receiver } from "./Interfaces.sol";
 
 
 
@@ -73,7 +73,7 @@ contract NFTMarket is ITokenReceiverWithData {
      */
     function _safeExecuteNFTPurchase(address buyer, address seller, uint256 tokenId, uint256 price) private {
         // 转移NFT给买家
-        require(nftContract.transferFrom(seller, buyer, tokenId), "NFT transfer failed");
+        nftContract.transferFrom(seller, buyer, tokenId);
 
         // 标记为不活跃
         listings[tokenId].active = false;

@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-import "openzeppelin-contracts/contracts/utils/Address.sol";
-import "openzeppelin-contracts/contracts/utils/Context.sol";
-import "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import {IERC721Receiver} from "./Interfaces.sol";
+import {IERC721} from "./Interfaces.sol";
 
 
-contract BaseERC721 {
+contract BaseERC721 is IERC721 {
     using Strings for uint256;
     using Address for address;
 
@@ -96,7 +98,7 @@ contract BaseERC721 {
     /**
      * @dev See {IERC721-ownerOf}.
      */
-    function ownerOf(uint256 tokenId) public view returns (address) {
+    function ownerOf(uint256 tokenId) public view override returns (address) {
         return _owners[tokenId];
     }
 
@@ -118,7 +120,7 @@ contract BaseERC721 {
     /**
      * @dev See {IERC721-getApproved}.
      */
-    function getApproved(uint256 tokenId) public view returns (address) {
+    function getApproved(uint256 tokenId) public view override returns (address) {
         require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 
         return _tokenApprovals[tokenId];
@@ -149,7 +151,7 @@ contract BaseERC721 {
     /**
      * @dev See {IERC721-transferFrom}.
      */
-    function transferFrom(address from, address to, uint256 tokenId) public {
+    function transferFrom(address from, address to, uint256 tokenId) public override {
         require(_isApprovedOrOwner(msg.sender, tokenId), "ERC721: transfer caller is not owner nor approved");
 
         _transfer(from, to, tokenId);

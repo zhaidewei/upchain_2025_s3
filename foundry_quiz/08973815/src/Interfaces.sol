@@ -1,18 +1,11 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.25;
 
 /**
  * @dev 扩展的代币接收者接口，支持额外数据参数
  */
 interface ITokenReceiverWithData {
     function tokensReceived(address from, uint256 amount, bytes calldata data) external;
-}
-
-
-/**
- * @dev Interface for contracts that want to support safeTransfers
- * from ERC721 asset contracts.
- */
-interface IERC721Receiver is IERC721 {
-    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 
 /*
@@ -22,6 +15,14 @@ interface IERC721 {
     function transferFrom(address from, address to, uint256 tokenId) external;
     function ownerOf(uint256 tokenId) external view returns (address);
     function getApproved(uint256 tokenId) external view returns (address);
+}
+
+/**
+ * @dev Interface for contracts that want to support safeTransfers
+ * from ERC721 asset contracts.
+ */
+interface IERC721Receiver is IERC721 {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 
 /*
