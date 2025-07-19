@@ -12,7 +12,7 @@ interface ITokenReceiverWithData {
 * @dev 简化的 ERC721 接口
 */
 interface IERC721 {
-    function transferFrom(address from, address to, uint256 tokenId) external;
+    function transferFrom(address from, address to, uint256 tokenId) external returns (bool);
     function ownerOf(uint256 tokenId) external view returns (address);
     function getApproved(uint256 tokenId) external view returns (address);
 }
@@ -21,7 +21,7 @@ interface IERC721 {
  * @dev Interface for contracts that want to support safeTransfers
  * from ERC721 asset contracts.
  */
-interface IERC721Receiver is IERC721 {
+interface IERC721Receiver {
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 

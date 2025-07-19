@@ -4,7 +4,7 @@ pragma solidity 0.8.25;
 
 import {ExtendedERC20WithData} from "./ExtendedERC20WithData.sol";
 import { ITokenReceiverWithData } from "./Interfaces.sol";
-import { IERC721Receiver } from "./Interfaces.sol";
+import { IERC721 } from "./Interfaces.sol";
 
 
 
@@ -15,10 +15,10 @@ import { IERC721Receiver } from "./Interfaces.sol";
 contract NFTMarket is ITokenReceiverWithData {
 
     // 扩展的 ERC20 代币合约
-    ExtendedERC20WithData public immutable paymentToken;
+    ExtendedERC20WithData public immutable PAYMENT_TOKEN;
 
     // NFT 合约
-    IERC721Receiver public immutable nftContract;
+    IERC721 public immutable NFT_CONTRACT;
 
     // 上架信息结构
     struct Listing {
@@ -39,8 +39,8 @@ contract NFTMarket is ITokenReceiverWithData {
         require(_paymentToken != address(0), "Payment token cannot be zero address");
         require(_nftContract != address(0), "NFT contract cannot be zero address");
 
-        paymentToken = ExtendedERC20WithData(_paymentToken);
-        nftContract = IERC721Receiver(_nftContract);
+        PAYMENT_TOKEN = ExtendedERC20WithData(_paymentToken);
+        NFT_CONTRACT = IERC721(_nftContract);
     }
 
     /**
@@ -50,8 +50,8 @@ contract NFTMarket is ITokenReceiverWithData {
      */
     function list(uint256 tokenId, uint256 price) external {
         require(price > 0, "Price must be greater than 0");
-        require(nftContract.ownerOf(tokenId) == msg.sender, "You don't own this NFT");
-        require(nftContract.getApproved(tokenId) == address(this), "NFT not approved to market");
+        require(NFT_CONTRACT.ownerOf(tokenId) == msg.sender, "You don't own this NFT");
+        require(NFT_CONTRACT.getApproved(tokenId) == address(this), "NFT not approved to market");
         require(!listings[tokenId].active, "NFT already listed");
 
         // 创建上架信息
@@ -71,9 +71,9 @@ contract NFTMarket is ITokenReceiverWithData {
      * @param tokenId NFT tokenId
      * @param price 价格
      */
-    function _safeExecuteNFTPurchase(address buyer, address seller, uint256 tokenId, uint256 price) private {
+    function _safeExecuteNftPurchase(address buyer, address seller, uint256 tokenId, uint256 price) private {
         // 转移NFT给买家
-        nftContract.transferFrom(seller, buyer, tokenId);
+        require(NFT_CONTRACT.transferFrom(seller, buyer, tokenId), "NFT transfer failed");
 
         // 标记为不活跃
         listings[tokenId].active = false;
@@ -97,13 +97,13 @@ contract NFTMarket is ITokenReceiverWithData {
      * @dev 普通购买 NFT 功能, 由购买者发起购买，按照listing price
      * @param tokenId NFT ID
      */
-    function buyNFT(uint256 tokenId) external {
+    function buyNft(uint256 tokenId) external {
         Listing memory listing = _safeValidatePurchase(msg.sender, tokenId);
 
         // 从买家转移代币到卖家
-        require(paymentToken.transferFrom(msg.sender, listing.seller, listing.price), "Payment failed");
+        require(PAYMENT_TOKEN.transferFrom(msg.sender, listing.seller, listing.price), "Payment failed");
         // 从卖家转移nft到买家
-        _safeExecuteNFTPurchase(msg.sender, listing.seller, tokenId, listing.price);
+        _safeExecuteNftPurchase(msg.sender, listing.seller, tokenId, listing.price);
     }
 
     /**
@@ -118,7 +118,7 @@ contract NFTMarket is ITokenReceiverWithData {
     function tokensReceived(address from, uint256 amount, bytes calldata data) external override {
         // 只接受来自指定 ExtendedERC20WithData 合约的调用，确认当这个函数被调用之前，
         //代币已经被买家转移进入了nftmarket合约账户， 否则无法完成交易
-        require(msg.sender == address(paymentToken), "Only accept calls from payment token");
+        require(msg.sender == address(PAYMENT_TOKEN), "Only accept calls from payment token");
         require(data.length >= 32, "Invalid data length");
 
         // 解析 tokenId
@@ -129,8 +129,8 @@ contract NFTMarket is ITokenReceiverWithData {
 
 
         // 需要将代币转移给卖家
-        require(paymentToken.transfer(listing.seller, amount), "Payment transfer to seller failed");
+        require(PAYMENT_TOKEN.transfer(listing.seller, amount), "Payment transfer to seller failed");
         // 将NFT转移给买家
-        _safeExecuteNFTPurchase(from, listing.seller, tokenId, listing.price);
+        _safeExecuteNftPurchase(from, listing.seller, tokenId, listing.price);
     }
 }
