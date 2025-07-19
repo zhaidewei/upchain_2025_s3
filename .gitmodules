@@ -25,3 +25,6 @@
 [submodule "foundry_quiz/fuzz/lib/forge-std"]
 	path = foundry_quiz/fuzz/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "foundry_quiz/08973815/lib/forge-std"]
+	path = foundry_quiz/08973815/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

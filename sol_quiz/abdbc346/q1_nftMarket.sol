@@ -17,7 +17,7 @@ buyNFT() : 普通的购买 NFT 功能，
 在 tokensReceived 中实现NFT 购买功能(注意扩展的转账需要添加一个额外数据参数)。
 */
 
-import {ExtendedERC20} from "https://github.com/zhaidewei/upchain_2025_s3/blob/main/solidity_quiz/4df553df/Q1_ERC20_with_hook.sol";
+import {ExtendedERC20} from "https://github.com/zhaidewei/upchain_2025_s3/blob/main/sol_quiz/4df553df/Q1_ERC20_with_hook.sol";
 
 /**
  * @dev 扩展的代币接收者接口，支持额外数据参数
