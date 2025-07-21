@@ -6,3 +6,5 @@ solc_version = "0.8.25"
 
 [rpc_endpoints]
 sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
+local = "http://127.0.0.1:8545"
+
