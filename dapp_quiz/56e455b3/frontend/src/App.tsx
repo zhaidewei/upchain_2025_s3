@@ -7,6 +7,7 @@ import DepositForm from './components/DepositForm'
 import WithdrawForm from './components/WithdrawForm'
 import UserDeposits from './components/UserDeposits'
 import TopDepositors from './components/TopDepositors'
+import NetworkSwitcher from './components/NetworkSwitcher'
 
 function App() {
   const { isConnected } = useAccount()
@@ -71,6 +72,9 @@ function App() {
         ) : (
           /* Connected Dashboard */
           <div className="space-y-8">
+            {/* Network Status */}
+            <NetworkSwitcher />
+
             {/* User Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <TokenBalance />

@@ -51,8 +51,22 @@ contract TokenBank {
         balances[msg.sender] += msg.value;
     }
 
-    // 管理员提取资金
-    function withdraw(uint256 amount) external onlyAdmin {
+    // 用户提取自己的存款
+    function withdraw(uint256 amount) external {
+        require(amount > 0, "Withdrawal amount must be greater than 0");
+        require(balances[msg.sender] >= amount, "Insufficient user balance");
+        require(address(this).balance >= amount, "Insufficient contract balance");
+
+        // 更新用户余额
+        balances[msg.sender] -= amount;
+
+        // 发送ETH给用户
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "Transfer failed");
+    }
+
+    // 管理员提取资金（管理员专用）
+    function adminWithdraw(uint256 amount) external onlyAdmin {
         require(amount > 0, "Withdrawal amount must be greater than 0");
         require(address(this).balance >= amount, "Insufficient contract balance");
         (bool success, ) = payable(admin).call{value: amount}("");

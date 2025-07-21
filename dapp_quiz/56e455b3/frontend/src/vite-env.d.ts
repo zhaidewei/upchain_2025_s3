@@ -11,3 +11,10 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+interface Window {
+  ethereum?: {
+    request: (args: { method: string; params?: any[] }) => Promise<any>
+    isMetaMask?: boolean
+  }
+}
