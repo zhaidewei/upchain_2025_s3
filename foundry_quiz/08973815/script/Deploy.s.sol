@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-import "forge-std/Script.sol";
-import "../src/ExtendedERC20WithData.sol";
-import "../src/BaseERC721.sol";
-import "../src/NFTMarket.sol";
+import {Script} from "forge-std/Script.sol";
+import {console} from "forge-std/console.sol";
+import {ExtendedERC20WithData} from "../src/ExtendedERC20WithData.sol";
+import {BaseERC721} from "../src/BaseERC721.sol";
+import {NFTMarket} from "../src/NFTMarket.sol";
+
 
 contract DeployScript is Script {
 

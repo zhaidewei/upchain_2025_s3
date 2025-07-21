@@ -28,3 +28,6 @@
 [submodule "foundry_quiz/08973815/lib/forge-std"]
 	path = foundry_quiz/08973815/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "dapp_quiz/56e455b3/lib/forge-std"]
+	path = dapp_quiz/56e455b3/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
