@@ -7,6 +7,9 @@ import {TokenBank} from "../src/TokenBank.sol";
 contract TokenBankTest is Test {
     TokenBank public bank;
 
+    // Allow the test contract to receive ETH
+    receive() external payable {}
+
     // Test accounts
     address public admin;
     address public alice;
@@ -39,6 +42,7 @@ contract TokenBankTest is Test {
         vm.deal(eve, 100 ether);
 
         // Deploy bank contract
+        vm.prank(admin);
         bank = new TokenBank();
     }
 
@@ -123,8 +127,9 @@ contract TokenBankTest is Test {
 
     function test_Deposit_ViaDirectTransfer() public {
         vm.prank(alice);
-        payable(address(bank)).transfer(MEDIUM_DEPOSIT);
+        (bool success,) = payable(address(bank)).call{value: MEDIUM_DEPOSIT}("");
 
+        assertTrue(success);
         assertEq(bank.balances(alice), MEDIUM_DEPOSIT);
         assertEq(bank.getContractBalance(), MEDIUM_DEPOSIT);
     }
@@ -141,6 +146,7 @@ contract TokenBankTest is Test {
         uint256 withdrawAmount = 2 ether;
         uint256 adminBalanceBefore = admin.balance;
 
+        vm.prank(admin);
         bank.withdraw(withdrawAmount);
 
         assertEq(bank.getContractBalance(), LARGE_DEPOSIT - withdrawAmount);
@@ -157,6 +163,7 @@ contract TokenBankTest is Test {
     }
 
     function test_Withdraw_ZeroAmount_Reverts() public {
+        vm.prank(admin);
         vm.expectRevert("Withdrawal amount must be greater than 0");
         bank.withdraw(0);
     }
@@ -165,6 +172,7 @@ contract TokenBankTest is Test {
         vm.prank(alice);
         bank.deposit{value: SMALL_DEPOSIT}();
 
+        vm.prank(admin);
         vm.expectRevert("Insufficient contract balance");
         bank.withdraw(MEDIUM_DEPOSIT);
     }
@@ -175,6 +183,7 @@ contract TokenBankTest is Test {
 
         uint256 adminBalanceBefore = admin.balance;
 
+        vm.prank(admin);
         bank.withdraw(MEDIUM_DEPOSIT);
 
         assertEq(bank.getContractBalance(), 0);
@@ -396,6 +405,7 @@ contract TokenBankTest is Test {
         bank.deposit{value: depositAmount}();
 
         uint256 adminBalanceBefore = admin.balance;
+        vm.prank(admin);
         bank.withdraw(withdrawAmount);
 
         assertEq(bank.getContractBalance(), depositAmount - withdrawAmount);
@@ -428,6 +438,7 @@ contract TokenBankTest is Test {
         assertEq(topDepositors[2].depositor, charlie); // 1 ether
 
         // Admin withdraws partial amount
+        vm.prank(admin);
         bank.withdraw(5 ether);
         assertEq(bank.getContractBalance(), 6 ether);
 
@@ -455,6 +466,7 @@ contract TokenBankTest is Test {
         assertEq(totalBalance, 8 ether);
 
         uint256 adminBalanceBefore = admin.balance;
+        vm.prank(admin);
         bank.withdraw(totalBalance);
 
         assertEq(bank.getContractBalance(), 0);

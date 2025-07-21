@@ -14,6 +14,9 @@ contract IntegrationTest is Test {
     Erc20Token public paymentToken;
     TokenBank public ethBank;
 
+    // Allow the test contract to receive ETH
+    receive() external payable {}
+
     // Test accounts
     address public deployer;
     address public alice;
@@ -323,6 +326,7 @@ contract IntegrationTest is Test {
 
         // Admin withdraws some ETH (simulating fee collection)
         uint256 adminBalanceBefore = deployer.balance;
+        vm.prank(deployer);
         ethBank.withdraw(3 ether);
         assertEq(deployer.balance, adminBalanceBefore + 3 ether);
 
