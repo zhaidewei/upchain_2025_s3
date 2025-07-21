@@ -55,7 +55,8 @@ contract TokenBank {
     function withdraw(uint256 amount) external onlyAdmin {
         require(amount > 0, "Withdrawal amount must be greater than 0");
         require(address(this).balance >= amount, "Insufficient contract balance");
-        require(payable(admin).call{value: amount}(""), "Transfer failed");
+        (bool success, ) = payable(admin).call{value: amount}("");
+        require(success, "Transfer failed");
     }
 
     // 查看合约总余额
