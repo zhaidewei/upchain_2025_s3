@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import NFTList from './NFTList'
-import ListNFTForm from './ListNFTForm'
 import TokenBalance from './TokenBalance'
+import ListNFTPanel from './ListNFTPanel'
 
 export default function NFTMarket() {
   const { isConnected } = useAccount()
@@ -22,7 +22,7 @@ export default function NFTMarket() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       {/* Token余额显示 */}
       <div className="mb-8">
         <TokenBalance />
@@ -56,7 +56,9 @@ export default function NFTMarket() {
       {activeTab === 'marketplace' ? (
         <NFTList />
       ) : (
-        <ListNFTForm />
+        <div className="container mx-auto py-8">
+          <ListNFTPanel />
+        </div>
       )}
     </div>
   )

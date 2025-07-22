@@ -71,3 +71,21 @@ cast send $ExtendedERC721 "approve(address,uint256)" $NFTMarket 1 --rpc-url loca
 
 cast send $NFTMarket "list(uint256,uint256)" 1 1e16 --rpc-url local --account anvil-tester --password ''
 ```
+
+# 给买家充值Anvil上的ETH
+```sh
+export metaMask=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+
+cast send $metaMask --value 1ether --rpc-url local --account anvil-tester --password ''
+```
+
+# 给买家ERC20
+
+```sh
+
+cast send $ExtendedERC20WithData "transfer(address,uint256)" $metaMask 1e19 --rpc-url local --account anvil-tester --password ''
+
+```
+
+
+# 买家购买

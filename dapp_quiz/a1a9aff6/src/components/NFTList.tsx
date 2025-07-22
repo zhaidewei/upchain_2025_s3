@@ -185,28 +185,6 @@ export default function NFTList() {
         </div>
       </div>
 
-      {/* 新增：上架NFT表单 */}
-      <div className="mb-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-medium mb-3">🆙 上架NFT</h3>
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              const form = e.target as typeof e.target & {
-                tokenId: { value: string }
-                price: { value: string }
-              }
-              handleListNFT(BigInt(form.tokenId.value), form.price.value)
-            }}
-            className="flex items-center gap-2"
-          >
-            <input name="tokenId" type="number" placeholder="Token ID" className="px-3 py-2 border rounded-lg" required />
-            <input name="price" type="text" placeholder="价格（ETH）" className="px-3 py-2 border rounded-lg" required />
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">上架</button>
-          </form>
-        </div>
-      </div>
-
       {testListing && (testListing as any)[2] ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow overflow-hidden">
