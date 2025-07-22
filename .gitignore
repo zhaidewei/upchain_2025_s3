@@ -68,6 +68,9 @@ Pipfile.lock
 .vscode/
 
 # MacOS
-.DS_Store 
+.DS_Store
 .env
 *.pem
+
+node_modules/
+cache/
