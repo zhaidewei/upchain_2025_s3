@@ -107,6 +107,18 @@ contract NFTMarket is ITokenReceiverWithData {
     }
 
     /**
+     * @dev 查询给定 tokenId 的上架信息
+     * @param tokenId NFT ID
+     * @return seller 卖家地址
+     * @return price 价格
+     * @return active 是否有效
+     */
+    function getListing(uint256 tokenId) external view returns (address seller, uint256 price, bool active) {
+        Listing memory listing = listings[tokenId];
+        return (listing.seller, listing.price, listing.active);
+    }
+
+    /**
      * @dev 实现 ITokenReceiverWithData 接口
      * 当用户调用 transferWithCallback 时会触发此函数
      * 买家 User 在 ERC20 合约里调用 transferWithCallback 时，携带 nftMarket 合约地址和 tokenId 作为附加数据
