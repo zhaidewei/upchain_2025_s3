@@ -4,7 +4,6 @@ import { WagmiProvider } from 'wagmi'
 import { arbitrum, mainnet, localhost } from 'wagmi/chains'
 
 // 1. Get projectId at https://cloud.walletconnect.com
-// 注意：这是一个测试用的Project ID，生产环境请使用真实的Project ID
 const projectId = import.meta.env.VITE_PROJECT_ID || 'c32cb9b0b86a4fa75e6bb1a6d0e88e93'
 
 // 2. Create wagmiConfig
@@ -38,7 +37,7 @@ export const config = defaultWagmiConfig({
   metadata,
 })
 
-// 3. Create modal
+//3. Create modal， Appkit 的 web3modal
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
