@@ -184,9 +184,37 @@ balanceOf(address _owner) public view returns (uint256 balance)
 ```sh
 export ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
 export OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+export TO=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
 
 cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+cast call $ERC20 "balanceOf(address)(uint256)" $TO --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
 
 ```
 
+
+### fianal result
 npx ts-node index.ts -c sepolia
+
+
+```sh
+npx ts-node index.ts -c sepolia
+[dotenv@17.2.0] injecting env (3) from .env (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+Using account: 0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+The account has 439952576563842878 ETH
+Transaction hash: 0x002b77ce78e52df8522242876f3e96ce8c16bbe1d5387f08a0013343749fc21d
+Transaction hash: 0x267ef3bb14e27fb193f15fcfd78b1d45e15d2a90abcf69ce0130ede2ca2bedbb
+ zhaidewei@MacBook-Pro  ~/upchain_2025_s3/dapp_quiz/992dae0f   main ● ? ↑2 
+TO_ADDR=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
+OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+
+cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+
+cast call $ERC20 "balanceOf(address)(uint256)" $TO_ADDR --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+Warning: This is a nightly build of Foundry. It is recommended to use the latest stable version. To mute this warning set `FOUNDRY_DISABLE_NIGHTLY_WARNING` in your environment.
+
+9999999999999999000000000 [9.999e24]
+Warning: This is a nightly build of Foundry. It is recommended to use the latest stable version. To mute this warning set `FOUNDRY_DISABLE_NIGHTLY_WARNING` in your environment.
+
+1000000000 [1e9]
+```

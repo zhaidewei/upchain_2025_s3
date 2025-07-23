@@ -6,7 +6,7 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { argv } from './src/parse'
 import { formatEther, parseEther } from 'viem'
 import { anvil, mainnet } from 'viem/chains'
-import { Chain, createWalletClient, http, publicActions, parseGwei } from 'viem'
+import { Chain, createWalletClient, http, publicActions, parseGwei, encodeFunctionData, parseAbi  } from 'viem'
 import { mySepolia } from './src/mySepolia'
 
 // step 1: private key -> account
@@ -53,7 +53,7 @@ walletClient.getBalance({
 });
 
 
-//Step 4: Compose transaction
+//Step 4: Before transfer, check the Token balance of the admin account
 /*
 export ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
 export OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
@@ -61,8 +61,6 @@ export OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
 cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
 */
 
-import { encodeFunctionData } from 'viem'
-import { parseAbi } from 'viem'
 
 const txParams = {
     gas: BigInt(50000),
@@ -85,3 +83,38 @@ const txParams = {
     const hash = await walletClient.sendRawTransaction({ serializedTransaction: signature });
     console.log('Transaction hash:', hash);
 })();
+
+
+//Step 5: Transfer Token
+/*
+
+TO_ADDR=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
+OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+
+cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+
+cast call $ERC20 "balanceOf(address)(uint256)" $TO_ADDR --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+*/
+const txParams2 = {
+    gas: BigInt(500000),
+    maxFeePerGas: parseGwei('20'),
+    maxPriorityFeePerGas: parseGwei('3'),
+  to: process.env.ERC20_ADDR as `0x${string}`,
+  value: BigInt(0),
+  data: encodeFunctionData({
+    abi: parseAbi(['function transfer(address _to, uint256 _value) returns (bool)']),
+    functionName: 'transfer',
+    args: [process.env.TO_ADDR as `0x${string}`, BigInt(1000000000)],
+  })
+};
+
+(async () => {
+    const request = await walletClient.prepareTransactionRequest(txParams2);
+    // Step 4: Sign transaction
+    const signature = await walletClient.signTransaction(request as any);
+    // Step 5: Send signed transaction
+    const hash = await walletClient.sendRawTransaction({ serializedTransaction: signature });
+    console.log('Transaction hash:', hash);
+})();
+
