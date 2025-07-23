@@ -33,11 +33,6 @@ export const argv = yargs(hideBin(process.argv))
     choices: ['anvil', 'sepolia', 'mainnet'],
     describe: 'The chain to use, choose from anvil, sepolia, mainnet',
   })
-  .option('to', {
-    alias: 't',
-    type: 'string',
-    describe: 'The address to send the transaction to',
-  })
   .option('value', {
     alias: 'v',
     type: 'string',

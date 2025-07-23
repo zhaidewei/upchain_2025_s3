@@ -140,3 +140,53 @@ const hash = await client.sendTransaction({
   value: parseEther('0.001')
 })
 ```
+
+3. 准备ERC20合约
+
+```sh
+export ROOT_PATH=/Users/zhaidewei/upchain_2025_s3/foundry_quiz/08973815/src
+forge create --rpc-url http://127.0.0.1:8545 --account anvil-tester --password '' $ROOT_PATH/ExtendedERC20WithData.sol:ExtendedERC20WithData --broadcast
+
+#Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#Deployed to: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+#Transaction hash: 0x6327abde4d3bb050ffba597a1d398c756f6b16e24a8a5ec94b1a9fa2566a288a
+```
+
+测试目标是，
+对ERC20合约转账
+
+4. 需要发送交易到sepolia网络。
+
+1 这意味着，erc20 合约需要先部署在sepolia上，使用forge create命令 + 本地keystore
+2 继续使用本地keystroe，呼叫这个合约的转账方法，给另一个地址在这个erc20合约里转账
+3 查询对方地址的余额
+
+4.1
+
+```sh
+export ROOT_PATH=/Users/zhaidewei/upchain_2025_s3/foundry_quiz/08973815/src
+forge create --rpc-url "https://ethereum-sepolia-rpc.publicnode.com" --account myMetaMaskAcc --password '' $ROOT_PATH/ExtendedERC20WithData.sol:ExtendedERC20WithData --broadcast
+
+#Deployer: 0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+#Deployed to: 0x264C4E0c7AD58d979e8648428791FbE06edAA23F
+#Transaction hash: 0xf5244fca7c9901237f166ed83f9864887144d0205e81ecd4ef3623783b48d40b
+
+```sh
+# cast balance 0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2 --rpc-url https://sepolia.base.org
+cast balance 0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2 --rpc-url https://ethereum-sepolia-rpc.publicnode.com
+
+cast wallet decrypt-keystore --keystore-dir ~/.foundry/keystores/ myMetaMaskAcc
+```
+
+
+4.2 使用脚本在sepolia的合约里查询余额
+balanceOf(address _owner) public view returns (uint256 balance)
+```sh
+export ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
+export OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+
+cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+
+```
+
+npx ts-node index.ts -c sepolia

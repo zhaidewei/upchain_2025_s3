@@ -1,52 +1,87 @@
 #!/usr/bin/env ts-node
+import dotenv from 'dotenv'
+dotenv.config()
 import { generatePrivateKey } from 'viem/accounts'
 import { privateKeyToAccount } from 'viem/accounts'
 import { argv } from './src/parse'
 import { formatEther, parseEther } from 'viem'
-import { anvil, baseSepolia, mainnet } from 'viem/chains'
-import { Chain, createWalletClient, http, publicActions } from 'viem'
+import { anvil, mainnet } from 'viem/chains'
+import { Chain, createWalletClient, http, publicActions, parseGwei } from 'viem'
+import { mySepolia } from './src/mySepolia'
 
-const privateKey = argv.genPrivateKey ? generatePrivateKey() : argv.privateKey
-
-const mapping = {
-    'anvil': anvil,
-    'sepolia': baseSepolia,
-    'mainnet': mainnet
+// step 1: private key -> account
+// 当genPrivateKey和privateKey都没有配置时，会取到env var
+let privateKey: string | undefined;
+if (argv.genPrivateKey) {
+  privateKey = generatePrivateKey();
+} else if (argv.privateKey) {
+  privateKey = argv.privateKey;
+} else if (process.env.PRIVATE_KEY) {
+  privateKey = process.env.PRIVATE_KEY;
+} else {
+  privateKey = undefined;
 }
-console.log(`Using chain: ${argv.chain}`)
 
 if (!privateKey) {
-  console.error('No private key provided. Please use --genPrivateKey to generate one or provide --privateKey.');
+  console.error('No private key provided. Please use --genPrivateKey to generate one or provide --privateKey or set PRIVATE_KEY in environment variables.');
   process.exit(1);
 }
-
-console.log(`Using private key: ${privateKey}`)
 
 const account = privateKeyToAccount(privateKey as `0x${string}`)
 console.log(`Using account: ${account.address}`)
 
-console.log(`step 0: Get wallet client`)
+// Step 2: Get Wallet Client
 
+
+const mapping = {
+    'anvil': anvil,
+    'sepolia': mySepolia,
+    'mainnet': mainnet
+}
+const chain = mapping[argv.chain as keyof typeof mapping] || anvil;
 const walletClient = createWalletClient({
     account: account,
-    chain: mapping[argv.chain as keyof typeof mapping] || anvil,
+    chain: chain,
     transport: http()
   }).extend(publicActions)
 
-console.log('Step 1: Getting balance...')
+// Step 3: Get ETH Balance of the account at the chain
 walletClient.getBalance({
   address: account.address,
 }).then((balance) => {
-  console.log(`The account has ${formatEther(balance)} ETH`);
+  console.log(`The account has ${balance} ETH`);
 });
 
-console.log(`Step 2: Sending transaction...`);
+
+//Step 4: Compose transaction
+/*
+export ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
+export OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+
+cast call $ERC20 "balanceOf(address)(uint256)" $OWNER --rpc-url "https://ethereum-sepolia-rpc.publicnode.com"
+*/
+
+import { encodeFunctionData } from 'viem'
+import { parseAbi } from 'viem'
+
+const txParams = {
+    gas: BigInt(50000),
+    maxFeePerGas: parseGwei('20'),
+    maxPriorityFeePerGas: parseGwei('3'),
+  to: process.env.ERC20_ADDR as `0x${string}`,
+  value: BigInt(0),
+  data: encodeFunctionData({
+    abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+    functionName: 'balanceOf',
+    args: [process.env.OWNER as `0x${string}`],
+  })
+};
 
 (async () => {
-  const hash = await walletClient.sendTransaction({
-    to: argv.to as `0x${string}`,
-    value: parseEther(argv.value as string),
-    data: argv.data as `0x${string}`
-  })
-  console.log('Transaction hash:', hash)
-})()
+    const request = await walletClient.prepareTransactionRequest(txParams);
+    // Step 4: Sign transaction
+    const signature = await walletClient.signTransaction(request as any);
+    // Step 5: Send signed transaction
+    const hash = await walletClient.sendRawTransaction({ serializedTransaction: signature });
+    console.log('Transaction hash:', hash);
+})();
