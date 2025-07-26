@@ -31,3 +31,6 @@
 [submodule "dapp_quiz/56e455b3/lib/forge-std"]
 	path = dapp_quiz/56e455b3/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "dapp_quiz/class_demo_sol/lib/forge-std"]
+	path = dapp_quiz/class_demo_sol/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "ts-node": "^10.9.2",
-    "viem": "^2.33.0"
+    "viem": "^2.33.0",
+    "yargs": "^18.0.0"
   }
 }
