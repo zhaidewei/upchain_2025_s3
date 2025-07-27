@@ -13,34 +13,18 @@
 
 ## 任务分解
 
-1. ✅ 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
+### 1. ✅ Goal: 实现一个EIP2612的Token合约
 
-2. ✅ 用从之前的[tokenBank合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/dapp_quiz/56e455b3/contracts/src/TokenBank.sol)作为基础，添加permitDeposit功能, 我选择不在tokenbank里去验证签名，直接丢给ERC20 合约去验证。通过permit方法去修改用户的allowarence为tokenBank
+也就是在erc20基础上添加erc2612里所要求的三个新方法。
 
-3.前端，支持通过签名存款的功能。用户可以点击签名存款，然后前端发送这个eip712的结构化签名给用户钱包。
+### 2. ✅ Goal: 实现一个支持permitDeposit方法的tokenbank
+
+我选择不在tokenbank里去验证签名，直接丢给ERC20 合约去验证。通过permit方法去修改用户的allowarence为tokenBank
+
+### 3. ✅ Goal：给tokenBank实现一个前端
+
+支持通过签名存款的功能。用户可以点击签名存款，然后前端发送这个eip712的结构化签名给用户钱包。
 钱包签名后，签名返回前端。
-
-4.发行一个[NFT合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/foundry_quiz/08973815/src/ExtendedERC721.sol)
-
-拿来之前的[NTFMarket 合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/foundry_quiz/08973815/src/NftMarket.sol)发行一个NFTMarket合约
-
-之前实现了一笔交易从ERC20发起，转账后，向NFTMarket合约发起购买交易。
-
-5 给nftmarket合约添加一个管理员地址，管理员可以修改白名单信息，也就是一个address到bool到映射，true是白，false是黑
-admin可以修改值，但是不用删除记录
-在合约里添加白名单地址，也就是合法买家地址。
-
-在NFTMarket里添加permitBuy()方法，如果前端发来的签名的用户（注意，不需要是本人发送）在白名单里，那么就：
-1 使用用户的签名信息去erc20里调用permit，修改从买家给卖家在erc20里转账的allowance为nft的价格。
-2 在erc721合约里把nft卖给买家。
-3 在erc2612的token合约里调用transferfrom 函数给卖家打款。
-
-## 执行1-3
-
-1. ✅ Goal: 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
-2. ✅ Goal: 实现一个支持permitDeposit方法的tokenbank
-3. ✅ Goal：给tokenBank实现一个前端。
-
 
 ```prompt
 在off_chain目录下，实现一个前端deapp程序。
@@ -92,7 +76,7 @@ cast call --rpc-url http://localhost:8545 $tokenBank "getUserBalance(address)(ui
 # 0
 ```
 
-## 执行4
+### 4 ✅ 部署一个简单版本的ERC721合约，然后mint
 
 ```sh
 # 先部署之前的NFT合约
@@ -109,6 +93,79 @@ forge inspect src/BaseErc721.sol:BaseERC721 abi --json > BaseERC721.json
 #MINT
 export NFT=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
 export Dewei=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
-cast call $NFT "mint(address)" $Dewei --account anvil-tester --password ''
+export USER3=0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+cast send $NFT "mint(address)" $Dewei --account anvil-tester --password '' # 0
+cast send $NFT "mint(address)" $USER3 --account anvil-tester --password '' # 1
+cast send $NFT "mint(address)(uint256)" $USER3 --account anvil-tester --password ''
 
 ```
+
+
+### 5 引入管理员EIP712签名的白名单验证 ✅
+
+#### 5.1 NFTMarket合约
+
+给nftmarket合约添加一个管理员地址，管理员可以签署一个EIP712签名，声明一个buyer地址是不是可以购买NFT。这里需要引入一个EIP712签名。
+
+```sh
+#准备脚本
+export ERC20=0x5FbDB2315678afecb367f032d93F642f64180aa3
+export NFT=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+export DOMAIN_NAME=DNFT
+export VERSION="1.0"
+forge create --rpc-url $anvil --account anvil-tester --password '' src/NFTMarket.sol:NFTMarket --broadcast --constructor-args $ERC20 $NFT $DOMAIN_NAME $VERSION
+
+#Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#Deployed to: 0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+#Transaction hash: 0x946fdea217072122847183f3ac59e30aec7474ee9d91205c5dd4ac36d2150edd
+export NFTMARKETOWNER=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+export NFTMARKET=0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+
+
+
+# approve nft to market
+export BUYER3_PRIVATEKEY=0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+export NFT=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+export NFTMARKET=0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+export anvil="http://localhost:8545"
+
+cast send \
+--rpc-url $anvil \
+--private-key $BUYER3_PRIVATEKEY \
+$NFT \
+"approve(address,uint256)" \
+$NFTMARKET "2"
+
+# listing
+export BUYER3_PRIVATEKEY=0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+export NFTMARKET=0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+export anvil="http://localhost:8545"
+cast send \
+--rpc-url $anvil \
+--private-key $BUYER3_PRIVATEKEY \
+$NFTMARKET \
+"list(uint256,uint256)" \
+"2" "1000000000" # 1e-9 token
+
+```
+
+#### 5.2 typescript 工具做签名 ✅
+
+前端部分，为了简单，用typescript的CLI工具做，里面支持admin 给buyer签署白名单签名。
+
+1. NFTMarket 合约需要有个admin
+2. admin离线签署EIP712 sig，声明某buyer地址可以购买NFT
+3. 这个Buyer拿到sig后，亲自呼叫permitBuy方法
+
+### 6 permitBuy实现 ✅
+
+配合第5步，在NFTMarket合约里实现可以验证EIP712的permitBuy
+
+不做前端，用cast命令模拟操作了。
+买家，需要先在erc20里approve 给NFTMarket合约
+然后获取白名单签名
+然后调用permitBuy函数
+permitBuy函数首先验证签名，使用deadline 而不是nonce，因为并发性
+其次尝试执行buyNFT操作，如果失败就revert，另外，隐藏buyNFT操作，不允许买家绕开permitBuy操作
+
+具体实现见`step6.sh`
