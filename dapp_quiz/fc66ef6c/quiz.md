@@ -24,6 +24,8 @@
 
 拿来之前的[NTFMarket 合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/foundry_quiz/08973815/src/NftMarket.sol)发行一个NFTMarket合约
 
+之前实现了一笔交易从ERC20发起，转账后，向NFTMarket合约发起购买交易。
+
 5 给nftmarket合约添加一个管理员地址，管理员可以修改白名单信息，也就是一个address到bool到映射，true是白，false是黑
 admin可以修改值，但是不用删除记录
 在合约里添加白名单地址，也就是合法买家地址。
@@ -33,13 +35,12 @@ admin可以修改值，但是不用删除记录
 2 在erc721合约里把nft卖给买家。
 3 在erc2612的token合约里调用transferfrom 函数给卖家打款。
 
-## 执行
+## 执行1-3
 
 1. ✅ Goal: 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
 2. ✅ Goal: 实现一个支持permitDeposit方法的tokenbank
 3. ✅ Goal：给tokenBank实现一个前端。
 
-**注意**: 连接问题已解决 - 使用手动连接按钮作为备用方案，因为 MetaMask 连接器的 `ready` 状态可能不正确。
 
 ```prompt
 在off_chain目录下，实现一个前端deapp程序。
@@ -52,6 +53,7 @@ admin可以修改值，但是不用删除记录
 5. 不要做不相关的功能，keep it simple，this is just a demo
 6. 目标合约我已经部署在Anvil网络里了，看quiz.md下面的记录
 ```
+
 ```sh
 cd ../off_chain && npm create vite@latest tokenbank-frontend -- --template react-ts
 npm install
@@ -88,4 +90,17 @@ cast call --rpc-url http://localhost:8545 $ERC20 "balanceOf(address)(uint256)" $
 
 cast call --rpc-url http://localhost:8545 $tokenBank "getUserBalance(address)(uint256)" $adminAddress
 # 0
+```
+
+## 执行4
+
+```sh
+# 先部署之前的NFT合约
+export ON_CHAIN_PATH=/Users/zhaidewei/upchain_2025_s3/dapp_quiz/fc66ef6c/on_chain
+export anvil="http://localhost:8545"
+forge create --rpc-url $anvil --account anvil-tester --password '' src/ExtendedErc721.sol:ExtendedERC721 --broadcast
+
+#Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#Deployed to: 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+#Transaction hash: 0x5c626fb56261a17e9d965b0e5020058a5056a3ca97ae9f5c51ba91a518e71c4a
 ```
