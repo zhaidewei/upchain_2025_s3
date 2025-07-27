@@ -31,7 +31,10 @@ contract Erc20Eip2612CompatiableTest is Test {
     function test_BasicERC20Functionality() public {
         assertEq(token.name(), "DeweiERC2612");
         assertEq(token.symbol(), "DToken");
-        assertEq(token.balanceOf(deployer), 1_000_000_000 - 1000);
+
+
+
+        assertEq(token.balanceOf(deployer), 1_000_000_000 ether - 1000);
         assertEq(token.balanceOf(owner), 1000);
     }
 
@@ -119,7 +122,7 @@ contract Erc20Eip2612CompatiableTest is Test {
         token.transferFrom(owner, spender, 50);
 
         // Check balances after transfer
-        assertEq(token.balanceOf(owner), 950);
+        assertEq(token.balanceOf(owner), 1000 - 50);
         assertEq(token.balanceOf(spender), 50);
         assertEq(token.allowance(owner, spender), 50); // Remaining allowance
     }
