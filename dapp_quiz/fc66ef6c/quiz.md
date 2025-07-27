@@ -98,9 +98,17 @@ cast call --rpc-url http://localhost:8545 $tokenBank "getUserBalance(address)(ui
 # 先部署之前的NFT合约
 export ON_CHAIN_PATH=/Users/zhaidewei/upchain_2025_s3/dapp_quiz/fc66ef6c/on_chain
 export anvil="http://localhost:8545"
-forge create --rpc-url $anvil --account anvil-tester --password '' src/ExtendedErc721.sol:ExtendedERC721 --broadcast
+forge create --rpc-url $anvil --account anvil-tester --password '' src/BaseErc721.sol:BaseERC721 --broadcast --constructor-args DNft721 DNFT
 
 #Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-#Deployed to: 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
-#Transaction hash: 0x5c626fb56261a17e9d965b0e5020058a5056a3ca97ae9f5c51ba91a518e71c4a
+#Deployed to: 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+#Transaction hash: 0x414db8f2711c1f807424a418e688c62dfcbbaf374835e5467147ab81758a8ca9
+
+forge inspect src/BaseErc721.sol:BaseERC721 abi --json > BaseERC721.json
+
+#MINT
+export NFT=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+export Dewei=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
+cast call $NFT "mint(address)" $Dewei --account anvil-tester --password ''
+
 ```

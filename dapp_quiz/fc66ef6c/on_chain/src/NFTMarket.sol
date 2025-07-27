@@ -1,23 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-
-import {ExtendedERC20WithData} from "./ExtendedERC20WithData.sol";
-import { ITokenReceiverWithData } from "./Interfaces.sol";
+import { Erc20Eip2612Compatiable } from "./Erc20Eip2612Compatiable.sol";
 import { IERC721 } from "./Interfaces.sol";
-
-
 
 /**
  * @title NFTMarket
  * @dev 使用扩展 ERC20 Token 进行 NFT 交易的市场合约
  */
-contract NFTMarket is ITokenReceiverWithData {
+contract NFTMarket {
 
     // 扩展的 ERC20 代币合约
-    ExtendedERC20WithData public immutable PAYMENT_TOKEN;
+    Erc20Eip2612Compatiable public immutable PAYMENT_TOKEN;
 
-    // NFT 合约
+    // NFT 合约 - 使用接口而不是具体实现
     IERC721 public immutable NFT_CONTRACT;
 
     // 上架信息结构
@@ -39,15 +35,10 @@ contract NFTMarket is ITokenReceiverWithData {
         require(_paymentToken != address(0), "Payment token cannot be zero address");
         require(_nftContract != address(0), "NFT contract cannot be zero address");
 
-        PAYMENT_TOKEN = ExtendedERC20WithData(_paymentToken);
+        PAYMENT_TOKEN = Erc20Eip2612Compatiable(_paymentToken);
         NFT_CONTRACT = IERC721(_nftContract);
     }
 
-    /**
-     * @dev 上架 NFT
-     * @param tokenId NFT ID
-     * @param price 设定价格（ERC20 token数量）
-     */
     function list(uint256 tokenId, uint256 price) external {
         require(price > 0, "Price must be greater than 0");
         require(NFT_CONTRACT.ownerOf(tokenId) == msg.sender, "You don't own this NFT");
@@ -64,55 +55,21 @@ contract NFTMarket is ITokenReceiverWithData {
         emit NFTListed(tokenId, msg.sender, price);
     }
 
-    /**
-     * @dev 内部函数：执行NFT购买逻辑，实现了成功检查和错误回滚，不用从外部再判断一次了
-     * @param buyer 买家地址
-     * @param seller 卖家地址
-     * @param tokenId NFT tokenId
-     * @param price 价格
-     */
-    function _safeExecuteNftPurchase(address buyer, address seller, uint256 tokenId, uint256 price) private {
-        // 转移NFT给买家
-        require(NFT_CONTRACT.transferFrom(seller, buyer, tokenId), "NFT transfer failed");
-
-        // 标记为不活跃
-        listings[tokenId].active = false;
-
-        emit NFTSold(tokenId, seller, buyer, price);
-    }
-
-    /**
-     * @dev 内部函数：验证购买条件
-     * @param buyer 买家地址
-     * @param tokenId NFT tokenId
-     * @return listing NFT列表信息
-     */
-    function _safeValidatePurchase(address buyer, uint256 tokenId) private view returns (Listing memory listing) {
-        listing = listings[tokenId];
-        require(listing.active, "NFT not listed");
-        require(buyer != listing.seller, "Cannot buy your own NFT");
-    }
-
-    /**
-     * @dev 普通购买 NFT 功能, 由购买者发起购买，按照listing price
-     * @param tokenId NFT ID
-     */
     function buyNft(uint256 tokenId) external {
-        Listing memory listing = _safeValidatePurchase(msg.sender, tokenId);
+        Listing memory listing = listings[tokenId];
+        require(listing.active, "NFT not listed");
+        require(msg.sender != listing.seller, "Cannot buy your own NFT");
 
         // 从买家转移代币到卖家
         require(PAYMENT_TOKEN.transferFrom(msg.sender, listing.seller, listing.price), "Payment failed");
         // 从卖家转移nft到买家
-        _safeExecuteNftPurchase(msg.sender, listing.seller, tokenId, listing.price);
+        NFT_CONTRACT.transferFrom(listing.seller, msg.sender, tokenId);
+        // 标记为不活跃
+        listings[tokenId].active = false;
+
+        emit NFTSold(tokenId, listing.seller, msg.sender, listing.price);
     }
 
-    /**
-     * @dev 查询给定 tokenId 的上架信息
-     * @param tokenId NFT ID
-     * @return seller 卖家地址
-     * @return price 价格
-     * @return active 是否有效
-     */
     function getListing(uint256 tokenId) external view returns (address seller, uint256 price, bool active) {
         Listing memory listing = listings[tokenId];
         return (listing.seller, listing.price, listing.active);
