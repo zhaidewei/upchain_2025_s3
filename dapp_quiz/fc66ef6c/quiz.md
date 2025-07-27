@@ -13,7 +13,7 @@
 
 ## 任务分解
 
-1. 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
+1. ✅ 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
 
 2. 用从之前的[tokenBank合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/dapp_quiz/56e455b3/contracts/src/TokenBank.sol)作为基础，添加permitDeposit功能。
 首先做签名验证，其次通过验证之后，通过permit方法去修改用户的allowarence为tokenBank
@@ -36,16 +36,5 @@ admin可以修改值，但是不用删除记录
 
 ## 执行
 
-1. Goal: 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
-
-```sh
-mkdir on_chain
-forge init
-# update foundry.toml and the lib
-# copy from old code
-
-touch src/Erc20Eip2612Compatiable.sol
-# edit
-forge build # success
-
-```
+1. ✅ Goal: 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
+2.

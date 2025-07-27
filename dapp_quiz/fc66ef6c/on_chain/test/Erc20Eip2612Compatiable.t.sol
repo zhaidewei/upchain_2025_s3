@@ -58,9 +58,9 @@ contract Erc20Eip2612CompatiableTest is Test {
         uint256 value = 100;
         uint256 deadline = block.timestamp + 3600; // 1 hour from now
         uint256 nonce = token.nonces(owner);
-        console.log("Nonce:", nonce);
+        console.log("Current Nonce:", nonce);
 
-        // Create the hash exactly as the contract does
+        // Create the hash exactly as the contract does - use nonce + 1
         bytes32 hash = keccak256(abi.encodePacked(
             hex"1901",
             token.DOMAIN_SEPARATOR(),
@@ -69,7 +69,7 @@ contract Erc20Eip2612CompatiableTest is Test {
                 owner,
                 spender,
                 value,
-                nonce,
+                nonce + 1, // Use next nonce as expected by contract
                 deadline))
         ));
 
@@ -95,7 +95,7 @@ contract Erc20Eip2612CompatiableTest is Test {
         uint256 deadline = block.timestamp + 3600; // 1 hour from now
         uint256 nonce = token.nonces(owner);
 
-        // Create the hash exactly as the contract does
+        // Create the hash exactly as the contract does - use nonce + 1
         bytes32 hash = keccak256(abi.encodePacked(
             hex"1901",
             token.DOMAIN_SEPARATOR(),
@@ -104,7 +104,7 @@ contract Erc20Eip2612CompatiableTest is Test {
                 owner,
                 spender,
                 value,
-                nonce,
+                nonce + 1, // Use next nonce as expected by contract
                 deadline))
         ));
 
@@ -129,7 +129,7 @@ contract Erc20Eip2612CompatiableTest is Test {
         uint256 deadline = block.timestamp - 1; // Expired deadline
         uint256 nonce = token.nonces(owner);
 
-        // Create the hash exactly as the contract does
+        // Create the hash exactly as the contract does - use nonce + 1
         bytes32 hash = keccak256(abi.encodePacked(
             hex"1901",
             token.DOMAIN_SEPARATOR(),
@@ -138,7 +138,7 @@ contract Erc20Eip2612CompatiableTest is Test {
                 owner,
                 spender,
                 value,
-                nonce,
+                nonce + 1, // Use next nonce as expected by contract
                 deadline))
         ));
 
@@ -155,7 +155,7 @@ contract Erc20Eip2612CompatiableTest is Test {
         uint256 deadline = block.timestamp + 3600;
         uint256 nonce = token.nonces(owner);
 
-        // Create the hash exactly as the contract does
+        // Create the hash exactly as the contract does - use nonce + 1
         bytes32 hash = keccak256(abi.encodePacked(
             hex"1901",
             token.DOMAIN_SEPARATOR(),
@@ -164,7 +164,7 @@ contract Erc20Eip2612CompatiableTest is Test {
                 owner,
                 spender,
                 value,
-                nonce,
+                nonce + 1, // Use next nonce as expected by contract
                 deadline))
         ));
 

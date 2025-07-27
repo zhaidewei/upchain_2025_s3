@@ -31,7 +31,7 @@ contract Erc20Eip2612Compatiable is BaseErc20 {
                 owner,
                 spender,
                 value,
-                _nonces[owner],
+                _nonces[owner]+1, // requester should use the next nonce
                 deadline))
         ));
 
@@ -41,8 +41,8 @@ contract Erc20Eip2612Compatiable is BaseErc20 {
         _nonces[owner]++;
     }
 
-    function nonces(address owner) external view returns (uint) {
-        return _nonces[owner];
+    function nonces(address user) external view returns (uint) {
+        return _nonces[user];
 
     }
     function DOMAIN_SEPARATOR() public view returns (bytes32) {
