@@ -6,7 +6,7 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract BaseErc20 is ERC20 {
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
-        _mint(msg.sender, 1_000_000_000); // for test purpose, initial supply 1G DWT
+        _mint(msg.sender, 1_000_000_000 ether); // for test purpose, initial supply 1G DWT
     }
 }
 

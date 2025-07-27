@@ -15,10 +15,9 @@
 
 1. ✅ 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
 
-2. 用从之前的[tokenBank合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/dapp_quiz/56e455b3/contracts/src/TokenBank.sol)作为基础，添加permitDeposit功能。
-首先做签名验证，其次通过验证之后，通过permit方法去修改用户的allowarence为tokenBank
+2. ✅ 用从之前的[tokenBank合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/dapp_quiz/56e455b3/contracts/src/TokenBank.sol)作为基础，添加permitDeposit功能, 我选择不在tokenbank里去验证签名，直接丢给ERC20 合约去验证。通过permit方法去修改用户的allowarence为tokenBank
 
-3.前端，用之前的前端程序作为基础。 支持通过签名存款的功能。用户可以点击签名存款，然后前端发送这个eip712的结构化签名给用户钱包。
+3.前端，支持通过签名存款的功能。用户可以点击签名存款，然后前端发送这个eip712的结构化签名给用户钱包。
 钱包签名后，签名返回前端。
 
 4.发行一个[NFT合约](https://github.com/zhaidewei/upchain_2025_s3/blob/main/foundry_quiz/08973815/src/ExtendedERC721.sol)
@@ -37,4 +36,56 @@ admin可以修改值，但是不用删除记录
 ## 执行
 
 1. ✅ Goal: 实现一个EIP2612的Token合约。也就是在erc20基础上添加erc2612里所要求的三个新方法
-2.
+2. ✅ Goal: 实现一个支持permitDeposit方法的tokenbank
+3. ✅ Goal：给tokenBank实现一个前端。
+
+**注意**: 连接问题已解决 - 使用手动连接按钮作为备用方案，因为 MetaMask 连接器的 `ready` 状态可能不正确。
+
+```prompt
+在off_chain目录下，实现一个前端deapp程序。
+使用react，wagmi.
+要求具备以下功能：
+1. 和部署好的Erc20Eip2612Compatiable 以及 TokenBank 交互。ABI见`off_chain/abi/`folder
+2. 实现metaMask钱包登陆
+3. 实现查看用户在Erc20Eip2612Compatiable 以及 TokenBank 中账户余额的界面
+4. 实现利用TokenBank的permitDeposit 方法去签名存款。这种structure sign 需要的context需要前端从合约里提取。如果缺少方法，告诉我，我可以修改合约。
+5. 不要做不相关的功能，keep it simple，this is just a demo
+6. 目标合约我已经部署在Anvil网络里了，看quiz.md下面的记录
+```
+```sh
+cd ../off_chain && npm create vite@latest tokenbank-frontend -- --template react-ts
+npm install
+npm install wagmi viem @wagmi/core @wagmi/connectors
+```sh
+# 3.1 Prepare
+export ON_CHAIN_PATH=/Users/zhaidewei/upchain_2025_s3/dapp_quiz/fc66ef6c/on_chain
+export anvil="http://localhost:8545"
+export VERSION="1.0"
+
+# 3.1 Deploy ERC20_EIP2612
+cd $ON_CHAIN_PATH
+forge create --rpc-url $anvil --account anvil-tester --password '' src/Erc20Eip2612Compatiable.sol:Erc20Eip2612Compatiable --broadcast --constructor-args $VERSION
+#Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#Deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+#Transaction hash: 0x0e5689174cdb4b42d65fa00c7358b9600c80114659499ed106670b561186bae6
+export ERC20=0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+forge inspect src/Erc20Eip2612Compatiable.sol:Erc20Eip2612Compatiable abi --json > ../off_chain/abi_Erc20Eip2612Compatiable.json
+
+# 3.2 Deploy TokenBank
+forge create --rpc-url $anvil --account anvil-tester --password '' src/TokenBank.sol:TokenBank --broadcast --constructor-args $ERC20
+# Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+# Deployed to: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+# Transaction hash: 0x99dbf457806075cc33cf516376b06275feb4eb590c9bbf442f5b63045868a764
+
+forge inspect src/TokenBank.sol:TokenBank abi --json > ../off_chain/abi_TokenBank.json
+
+export ERC20=0x5FbDB2315678afecb367f032d93F642f64180aa3
+export tokenBank=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+export adminAddress=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+cast call --rpc-url http://localhost:8545 $ERC20 "balanceOf(address)(uint256)" $adminAddress
+# 1000000000000000000000000000 [1e27]
+
+cast call --rpc-url http://localhost:8545 $tokenBank "getUserBalance(address)(uint256)" $adminAddress
+# 0
+```
