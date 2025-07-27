@@ -31,7 +31,7 @@ contract Erc20Eip2612Compatiable is BaseErc20 {
                 owner,
                 spender,
                 value,
-                _nonces[owner]+1, // requester should use the next nonce
+                _nonces[owner]+1, // requester should use the next nonce, and starts from 1
                 deadline))
         ));
 
