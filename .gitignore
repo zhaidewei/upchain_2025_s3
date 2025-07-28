@@ -80,3 +80,5 @@ lib/
 out/
 
 broadcast/
+
+*.db

@@ -50,7 +50,7 @@ RPC_URL="http://localhost:8545"
 print_status "Deploying ERC20 contract..."
 
 # Deploy the contract using forge create
-DEPLOY_OUTPUT=$(forge create src/MyErc20.sol:MyErc20 \
+DEPLOY_OUTPUT=$(forge create /Users/zhaidewei/upchain_2025_s3/dapp_quiz/ae220513/on_chain/src/MyErc20.sol:MyErc20 \
     --private-key $ADMIN_PRIVATE_KEY \
     --rpc-url $RPC_URL \
     --broadcast \
