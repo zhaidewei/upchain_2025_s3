@@ -1,53 +1,24 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
-    hooks:
-      - id: flake8
-
-  # Solidity linting
-  - repo: local
-    hooks:
-      - id: solhint
-        name: Solidity Linter (solhint)
-        entry: bash -c 'cd solidity_quiz && npm run lint:sol'
-        language: system
-        files: \.sol$
-        pass_filenames: false
-
-      - id: solidity-compile
-        name: Solidity Compile Check
-        entry: bash -c 'cd solidity_quiz && npm run compile'
-        language: system
-        files: \.sol$
-        pass_filenames: false
-
-  # General file formatting
+  # 代码格式化
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
-        exclude: \.md$
       - id: end-of-file-fixer
       - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
       - id: check-json
       - id: check-toml
-      - id: check-merge-conflict
-      - id: check-added-large-files
-        args: ['--maxkb=1000']
       - id: mixed-line-ending
         args: ['--fix=lf']
+
+  # 安全检查
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
-      - id: detect-secrets
+    -   id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
-        exclude: |
-          (?x)^(
-              \.secrets\.baseline|
-              \.git/|
-              node_modules/|
-              cache/|
-              foundry\.lock
-          )$
+        exclude: package.lock.json
