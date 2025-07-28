@@ -41,6 +41,41 @@ USER1 和 USER2 相互转账。
 
 ## 3. 前端
 
-react + wagmi
-支持钱包登陆
-链接后端API，查询记录，显示
+React + Wagmi + Vite
+支持钱包登录
+连接后端API，查询记录，显示
+
+### 3.1 ✅ 项目初始化
+- 创建 React + TypeScript 项目
+`npm create vite@latest . -- --template react-ts`
+- 配置 Vite 开发环境 `npm install`
+- 安装 Wagmi + Viem 依赖
+`npm install wagmi viem @wagmi/core @wagmi/connectors`
+
+- 配置 Tailwind CSS 样式
+`npm install -D tailwindcss postcss autoprefixer`
+`npx tailwindcss init -p`
+
+
+
+### 3.2 ✅ 钱包连接功能
+- 实现钱包连接组件
+- 支持 MetaMask 等主流钱包
+- 显示当前连接地址
+- 钱包断开连接功能
+
+`test-frontend.sh`
+
+
+### 3.3 转账记录查询
+- 连接后端 API (http://localhost:3000)
+- 根据当前连接地址查询转账记录
+- 显示转账历史列表
+- 支持分页加载
+
+
+### 3.6 ✅ 用户体验优化
+- 加载状态显示
+- 错误处理和提示
+- 响应式设计
+- 美观的 UI 界面
