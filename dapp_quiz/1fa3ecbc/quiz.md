@@ -120,3 +120,14 @@ permitTransferFrom 签名的时候需要`spender`，调用的时候不用，而�
 * `test_sig_2.sh` -> `gen_and_send_signature_via_tokenBank.ts`
 
 5 前端部分
+
+这里需要把test_sig_2.sh 和 gen_and_send_signature_via_tokenBank
+
+里的方法拿到前端，
+简单起见，让用户手工输入nonce，然后呼叫一个方法去检查该nonce是否被占用
+向TokenBank转账的办法
+
+我会在MetaMask里导入Anvil test user，去签名
+
+
+**坑-3**  时区

@@ -8,9 +8,9 @@ import { createPublicClient } from 'viem'
 // 配置
 const PERMIT2_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
 const TOKEN_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
-const TOKEN_BANK_ADDRESS = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+const TOKEN_BANK_ADDRESS = '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0'
 const USER1_PRIVATE_KEY = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'
-const USER1_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
+const USER1_ADDRESS = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
 const USER2_PRIVATE_KEY = '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a'
 const USER2_ADDRESS = '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'
 
@@ -134,8 +134,51 @@ async function generateSignatureAndCallTokenBank() {
   console.log(`✅ 最终使用的nonce: ${nonce.toString()}`)
 
   // 准备签名数据
-  const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600) // 1小时后过期
+  // 获取区块链时间并计算deadline
+  console.log('🕒 获取区块链时间进行deadline计算...')
+
+  const blockchainTime = await publicClient.getBlock({ blockTag: 'latest' }).then(block => {
+    const timestamp = Number(block.timestamp)
+    console.log('✅ 成功获取区块链时间:', timestamp)
+    console.log('📋 区块信息:', {
+      number: block.number.toString(),
+      timestamp: timestamp,
+      hash: block.hash
+    })
+    return timestamp
+  })
+
+  const localTime = Math.floor(Date.now() / 1000)
+  const timeDiff = Math.abs(blockchainTime - localTime)
+
+  // 明确显示我们使用的是区块链时间
+  console.log('🎯 使用区块链时间计算deadline（不是本地时间）！')
+  console.log('📊 区块链时间:', blockchainTime, '(用作deadline基准)')
+  console.log('📊 本地机器时间:', localTime, '(仅用于对比)')
+
+  const deadline = BigInt(blockchainTime + 24 * 3600) // 24小时buffer
   const amount = 10_000_000_000_000_000_000n // 10 tokens
+
+  console.log('✅ Deadline已使用区块链时间计算（非本地时间）')
+
+  console.log('=== 时间同步调试信息 ===')
+  console.log('🔹 时间基准来源: 区块链时间')
+  console.log('🔹 区块链时间 (秒):', blockchainTime)
+  console.log('🔹 本地时间 (秒):', localTime)
+  console.log('🔹 时间差异:', timeDiff, '秒')
+  console.log('🔹 Deadline (秒):', deadline.toString())
+  console.log('🔹 距离deadline时间:', Number(deadline) - blockchainTime, '秒 (24小时)')
+  console.log('🔹 区块链时间字符串:', new Date(blockchainTime * 1000).toString())
+  console.log('🔹 本地时间字符串:', new Date(localTime * 1000).toString())
+  console.log('🔹 Deadline时间字符串:', new Date(Number(deadline) * 1000).toString())
+
+  if (timeDiff > 60) {
+    console.warn('⚠️ 检测到显著时间差异:', timeDiff, '秒')
+    console.warn('💡 但不用担心 - 我们使用区块链时间作为deadline基准！')
+  } else {
+    console.log('✅ 区块链时间与本地时间同步良好（差异 < 1分钟）')
+  }
+  console.log('==============================')
 
   // 🎯 EIP712签名：包含spender字段（TokenBank地址）
   const valuesForSigning = {

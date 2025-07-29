@@ -1,16 +1,16 @@
 🚀 开始测试 Permit2 直接签名转账...
 📋 配置信息:
   ERC20合约: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
-  User1 (签名者): 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+  User1 (签名者): 0x70997970c51812dc3a010c7d01b50e0d17dc79c8
   User2 (spender): 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
 🔍 检查nonce状态...
 📊 Nonce状态信息:
-  地址: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+  地址: 0x70997970c51812dc3a010c7d01b50e0d17dc79c8
   Nonce: 0
   状态: ❌ 已使用
   WordPos: 0
   BitPos: 0
-🔍 为 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 寻找未使用的nonce，从 0 开始...
+🔍 为 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 寻找未使用的nonce，从 0 开始...
 ✅ 找到未使用的nonce: 1
 🎯 推荐使用的nonce: 1
 
@@ -75,11 +75,11 @@
     transferDetails (SignatureTransferDetails):
       to: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
       requestedAmount: 10000000000000000000
-    owner: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+    owner: 0x70997970c51812dc3a010c7d01b50e0d17dc79c8
     signature: 0xdc37a03cb270366a274c31dc5dbb038c1a7180f2a34ba596df15583be47763521fdb15275fd95282d0e711c51f708cbe811fbac0f900b184fd533bcb44b6f1631c
 
 📋 完整命令:
-cast send --rpc-url http://127.0.0.1:8545     --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a     0x5FbDB2315678afecb367f032d93F642f64180aa3     "permitTransferFrom(((address,uint256),uint256,uint256),(address,uint256),address,bytes)"     "((0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512,10000000000000000000),1,1753801039)"     "(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC,10000000000000000000)"     0x70997970C51812dc3A010C7d01b50e0d17dc79C8     0xdc37a03cb270366a274c31dc5dbb038c1a7180f2a34ba596df15583be47763521fdb15275fd95282d0e711c51f708cbe811fbac0f900b184fd533bcb44b6f1631c
+cast send --rpc-url http://127.0.0.1:8545     --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a     0x5FbDB2315678afecb367f032d93F642f64180aa3     "permitTransferFrom(((address,uint256),uint256,uint256),(address,uint256),address,bytes)"     "((0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512,10000000000000000000),1,1753801039)"     "(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC,10000000000000000000)"     0x70997970c51812dc3a010c7d01b50e0d17dc79c8     0xdc37a03cb270366a274c31dc5dbb038c1a7180f2a34ba596df15583be47763521fdb15275fd95282d0e711c51f708cbe811fbac0f900b184fd533bcb44b6f1631c
 
 🔄 执行流程:
   1. User1签名授权User2为spender (EIP712包含spender)

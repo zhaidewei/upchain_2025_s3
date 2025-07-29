@@ -29,6 +29,12 @@ contract TokenBank {
         PERMIT2 = _permit2;
     }
 
+    // Add ERC165 support to prevent execution reverted errors
+    function supportsInterface(bytes4 interfaceId) public pure returns (bool) {
+        // Return false for ERC20/ERC721 interface IDs to indicate this is not a token contract
+        return false;
+    }
+
     // 普通存款函数 - 需要预先approve
     function deposit(uint256 amount) external {
         require(amount > 0, "Deposit amount must be greater than 0");
@@ -77,6 +83,7 @@ contract TokenBank {
 
         // 使用 Permit2 的 permitTransferFrom 进行签名转移
         // 这个函数会自动将代币从 owner 转移到 address(this)
+        // 注意：msg.sender 必须是 EIP712 签名中的 spender
         ISignatureTransfer(PERMIT2).permitTransferFrom(permit, transferDetails, owner, signature);
 
         // 如果是新用户，添加到存款者数组

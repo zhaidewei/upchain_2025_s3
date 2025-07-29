@@ -1,0 +1,164 @@
+.permit2-deposit {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.permit2-deposit h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.permit2-deposit p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.deposit-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 12px;
+}
+
+.nonce-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.nonce-input-group input {
+  flex: 1;
+}
+
+.check-nonce-btn, .find-nonce-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.check-nonce-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.check-nonce-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.find-nonce-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.find-nonce-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.check-nonce-btn:disabled, .find-nonce-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.deposit-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.deposit-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.deposit-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.status-message {
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.status-message:contains('✅') {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-message:contains('❌') {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-message:contains('🔄') {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.info-box {
+  background-color: #e7f3ff;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.info-box h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.info-box ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-box li {
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.info-box p {
+  margin-top: 10px;
+  color: #666;
+  font-style: italic;
+}

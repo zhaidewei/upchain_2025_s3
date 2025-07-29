@@ -3,9 +3,9 @@
 echo "🚀 开始初始化 Permit2 TokenBank 测试环境..."
 
 # 设置账户地址变量
-export ADMIN_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-export USER1_ADDRESS="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-export USER2_ADDRESS="0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+export ADMIN_ADDRESS="0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+export USER1_ADDRESS="0x70997970c51812dc3a010c7d01b50e0d17dc79c8"
+export USER2_ADDRESS="0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"
 
 # 设置anvil默认私钥
 export ADMIN_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
@@ -89,7 +89,18 @@ cast send --rpc-url http://127.0.0.1:8545 \
 
 echo "✅ User1获得100个token"
 
-# 8. user1 approve permit2合约max值
+# 8. admin approve permit2合约max值
+echo "🔐 Admin approve Permit2合约max值..."
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $ADMIN_PRIVATE_KEY \
+    $ERC20_ADDRESS \
+    "approve(address,uint256)" \
+    $PERMIT2_ADDRESS \
+    "115792089237316195423570985008687907853269984665640564039457584007913129639935" # max uint256
+
+echo "✅ Admin已approve Permit2合约"
+
+# 9. user1 approve permit2合约max值
 echo "🔐 User1 approve Permit2合约max值..."
 cast send --rpc-url http://127.0.0.1:8545 \
     --private-key $USER1_PRIVATE_KEY \
@@ -100,8 +111,25 @@ cast send --rpc-url http://127.0.0.1:8545 \
 
 echo "✅ User1已approve Permit2合约"
 
-# 9. 验证初始状态
+# 10. 验证初始状态
 echo "🔍 验证初始状态..."
+
+# 检查admin在erc20的余额
+ADMIN_TOKEN_BALANCE=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $ERC20_ADDRESS \
+    "balanceOf(address)(uint256)" \
+    $ADMIN_ADDRESS)
+
+echo "  Admin在ERC20余额: $ADMIN_TOKEN_BALANCE (应该是900000000000000000000)"
+
+# 检查admin对permit2的allowance
+ADMIN_PERMIT2_ALLOWANCE=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $ERC20_ADDRESS \
+    "allowance(address,address)(uint256)" \
+    $ADMIN_ADDRESS \
+    $PERMIT2_ADDRESS)
+
+echo "  Admin对Permit2的allowance: $ADMIN_PERMIT2_ALLOWANCE (应该是max值)"
 
 # 检查user1在tokenbank的余额
 USER1_BANK_BALANCE=$(cast call --rpc-url http://127.0.0.1:8545 \

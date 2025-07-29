@@ -1,0 +1,51 @@
+.balance-display {
+  text-align: center;
+}
+
+.balance-display h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.balance-item {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.balance-item h3 {
+  color: #666;
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.balance-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+  margin: 0;
+}
+
+.address-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.address-info p {
+  margin: 5px 0;
+  word-break: break-all;
+}
