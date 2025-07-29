@@ -1,4 +1,4 @@
-infura_key=ceb0500d17b24bcb82e792ad4f118f9c
+infura_key=<your infura key>
 
 anvil --fork-url https://rpc.flashbots.net --start-time 1722336000 --fork-block-number 10000000
 
