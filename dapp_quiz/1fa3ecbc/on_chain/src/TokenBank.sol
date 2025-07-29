@@ -2,12 +2,11 @@
 pragma solidity ^0.8.25;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IPermit2} from "./permit2/src/interfaces/IPermit2.sol";
-import {ISignatureTransfer} from "./permit2/src/interfaces/ISignatureTransfer.sol";
+import {ISignatureTransfer} from "permit2/src/interfaces/ISignatureTransfer.sol";
 
 contract TokenBank {
     // The ERC20 token this bank manages
-    IERC20 public immutable token;
+    IERC20 public immutable TOKEN;
 
     // Permit2 address in mainnet
     // https://etherscan.io/address/0x000000000022d473030f116ddee9f6b43ac78ba3
@@ -26,7 +25,7 @@ contract TokenBank {
 
     constructor(address _token) {
         require(_token != address(0), "Token address cannot be zero");
-        token = IERC20(_token);
+        TOKEN = IERC20(_token);
     }
 
     // 普通存款函数 - 需要预先approve
@@ -34,7 +33,7 @@ contract TokenBank {
         require(amount > 0, "Deposit amount must be greater than 0");
 
         // 检查用户是否已经approve足够的额度给TokenBank
-        uint256 allowance = token.allowance(msg.sender, address(this));
+        uint256 allowance = TOKEN.allowance(msg.sender, address(this));
         require(allowance >= amount, "Insufficient allowance, please approve first");
 
         // 如果是新用户，添加到存款者数组
@@ -46,7 +45,7 @@ contract TokenBank {
         balances[msg.sender] += amount;
 
         // 转移代币到合约
-        bool success = token.transferFrom(msg.sender, address(this), amount);
+        bool success = TOKEN.transferFrom(msg.sender, address(this), amount);
         require(success, "TransferFrom failed");
 
         emit Deposit(msg.sender, amount);
@@ -64,9 +63,9 @@ contract TokenBank {
         require(owner != address(0), "Owner cannot be zero address");
         require(block.timestamp <= deadline, "ERC20Permit: expired deadline");
 
-        // 创建 PermitTransferFrom 结构体
+        // 创建 PermitTransferFrom 结构体 - 注意：不包含spender字段！
         ISignatureTransfer.PermitTransferFrom memory permit = ISignatureTransfer.PermitTransferFrom({
-            permitted: ISignatureTransfer.TokenPermissions({token: address(token), amount: amount}),
+            permitted: ISignatureTransfer.TokenPermissions({token: address(TOKEN), amount: amount}),
             nonce: nonce,
             deadline: deadline
         });
@@ -77,7 +76,7 @@ contract TokenBank {
 
         // 使用 Permit2 的 permitTransferFrom 进行签名转移
         // 这个函数会自动将代币从 owner 转移到 address(this)
-        IPermit2(PERMIT2).permitTransferFrom(permit, transferDetails, owner, signature);
+        ISignatureTransfer(PERMIT2).permitTransferFrom(permit, transferDetails, owner, signature);
 
         // 如果是新用户，添加到存款者数组
         if (balances[owner] == 0) {
@@ -99,7 +98,7 @@ contract TokenBank {
         balances[msg.sender] -= amount;
 
         // 发送代币给用户, transfer 不需要approve，可以直接转
-        bool success = token.transfer(msg.sender, amount);
+        bool success = TOKEN.transfer(msg.sender, amount);
         require(success, "Transfer failed");
 
         emit Withdraw(msg.sender, amount);
@@ -107,7 +106,7 @@ contract TokenBank {
 
     // 查看合约代币余额
     function getContractBalance() external view returns (uint256) {
-        return token.balanceOf(address(this));
+        return TOKEN.balanceOf(address(this));
     }
 
     // 获取存款用户总数
