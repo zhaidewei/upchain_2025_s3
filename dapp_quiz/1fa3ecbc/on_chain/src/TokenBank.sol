@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
+pragma solidity ^0.8.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ISignatureTransfer} from "permit2/src/interfaces/ISignatureTransfer.sol";
@@ -8,9 +8,8 @@ contract TokenBank {
     // The ERC20 token this bank manages
     IERC20 public immutable TOKEN;
 
-    // Permit2 address in mainnet
-    // https://etherscan.io/address/0x000000000022d473030f116ddee9f6b43ac78ba3
-    address public immutable PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
+    // Permit2 contract address
+    address public immutable PERMIT2;
 
     // 记录每个地址的存款金额
     mapping(address user => uint256 balance) public balances;
@@ -23,9 +22,11 @@ contract TokenBank {
     event Withdraw(address indexed user, uint256 amount);
     event PermitDeposit(address indexed user, uint256 amount);
 
-    constructor(address _token) {
+    constructor(address _token, address _permit2) {
         require(_token != address(0), "Token address cannot be zero");
+        require(_permit2 != address(0), "Permit2 address cannot be zero");
         TOKEN = IERC20(_token);
+        PERMIT2 = _permit2;
     }
 
     // 普通存款函数 - 需要预先approve

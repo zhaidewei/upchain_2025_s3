@@ -1,0 +1,127 @@
+🚀 开始测试 TokenBank depositWithPermit2 转账...
+📋 配置信息:
+  ERC20合约: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+  TokenBank合约: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+  User1 (签名者): 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+🔍 检查nonce状态...
+📊 Nonce状态信息:
+  地址: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+  Nonce: 0
+  状态: ✅ 未使用
+  WordPos: 0
+  BitPos: 0
+🔍 为 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 寻找未使用的nonce，从 0 开始...
+✅ 找到未使用的nonce: 0
+🎯 推荐使用的nonce: 0
+
+🔍 检查初始状态...
+📊 初始状态:
+  User1 ERC20余额: 100000000000000000000
+  TokenBank ERC20余额: 0
+  User1在TokenBank存款余额: 0
+💸 生成签名并执行TokenBank depositWithPermit2...
+🎯 TokenBank depositWithPermit2 流程:
+  1. User1签名授权TokenBank作为spender (EIP712签名包含spender)
+  2. User1调用TokenBank的depositWithPermit2方法
+  3. TokenBank调用Permit2.permitTransferFrom()
+  4. Permit2验证签名并将token从User1转到TokenBank
+  5. TokenBank更新User1的存款余额
+
+🔍 检查nonce状态...
+📋 使用推荐的nonce: 0
+✅ 最终使用的nonce: 0
+
+🔍 EIP712签名数据 (包含TokenBank作为spender):
+  Domain: {
+  name: 'Permit2',
+  chainId: 31337,
+  verifyingContract: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+}
+  Types: {
+  PermitTransferFrom: [
+    { name: 'permitted', type: 'TokenPermissions' },
+    { name: 'spender', type: 'address' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint256' }
+  ],
+  TokenPermissions: [
+    { name: 'token', type: 'address' },
+    { name: 'amount', type: 'uint256' }
+  ]
+}
+  Message: {
+  permitted: {
+    token: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+    amount: 10000000000000000000n
+  },
+  spender: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+  nonce: 0n,
+  deadline: 1753800981n
+}
+  🎯 关键：EIP712签名包含TokenBank作为spender字段
+
+✅ User1生成的签名:
+0xb7811a423c0426af261ffc610eb6fdeb9cf4add14944e3781b38705f6323138a667bdb5c98677dac5ca65cb17f0b4530a7d5caf6f7b8b819c941e9ae0d218c491b
+
+🚀 User1调用TokenBank的depositWithPermit2方法:
+  调用者: User1 (msg.sender)
+  合约地址: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+  方法: depositWithPermit2
+  参数:
+    owner: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+    amount: 10000000000000000000
+    deadline: 1753800981
+    nonce: 0
+    signature: 0xb7811a423c0426af261ffc610eb6fdeb9cf4add14944e3781b38705f6323138a667bdb5c98677dac5ca65cb17f0b4530a7d5caf6f7b8b819c941e9ae0d218c491b
+
+📋 完整命令:
+cast send --rpc-url http://127.0.0.1:8545     --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d     0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0     "depositWithPermit2(address,uint256,uint256,uint256,bytes)"     0x70997970C51812dc3A010C7d01b50e0d17dc79C8     10000000000000000000     1753800981     0     0xb7811a423c0426af261ffc610eb6fdeb9cf4add14944e3781b38705f6323138a667bdb5c98677dac5ca65cb17f0b4530a7d5caf6f7b8b819c941e9ae0d218c491b
+
+🔄 执行流程:
+  1. User1签名授权TokenBank为spender (EIP712包含TokenBank)
+  2. User1调用TokenBank.depositWithPermit2()
+  3. TokenBank调用Permit2.permitTransferFrom()
+  4. Permit2验证签名中spender == TokenBank
+  5. Permit2将User1的token转给TokenBank
+  6. TokenBank更新User1的存款余额
+  7. ✅ 完成！通过TokenBank进行存款
+
+🎉 TokenBank depositWithPermit2调用成功:
+
+blockHash            0x9eb75ab9e2d13753125024e687db6e441bcaacbbb22fd6248ae73ebe7dc4d0b6
+blockNumber          6
+contractAddress
+cumulativeGasUsed    158522
+effectiveGasPrice    527045301
+from                 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+gasUsed              158522
+logs                 [{"address":"0xe7f1725e7734ce288f8367e1bb143e90bb3f0512","topics":["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef","0x00000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c8","0x0000000000000000000000009fe46736679d2d9a65f0992f2272de9f3c7fa6e0"],"data":"0x0000000000000000000000000000000000000000000000008ac7230489e80000","blockHash":"0x9eb75ab9e2d13753125024e687db6e441bcaacbbb22fd6248ae73ebe7dc4d0b6","blockNumber":"0x6","blockTimestamp":"0x6888d305","transactionHash":"0x96c838680952c51798c7324b5656244330a177f2a15f4ee99d3150bd79f06ed2","transactionIndex":"0x0","logIndex":"0x0","removed":false},{"address":"0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0","topics":["0xe391e632f0c535fb9543412b49a49299087c915a9020b721a5dc29560e769930","0x00000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c8"],"data":"0x0000000000000000000000000000000000000000000000008ac7230489e80000","blockHash":"0x9eb75ab9e2d13753125024e687db6e441bcaacbbb22fd6248ae73ebe7dc4d0b6","blockNumber":"0x6","blockTimestamp":"0x6888d305","transactionHash":"0x96c838680952c51798c7324b5656244330a177f2a15f4ee99d3150bd79f06ed2","transactionIndex":"0x0","logIndex":"0x1","removed":false}]
+logsBloom            0x00000000000000000002000000000000000000000000000000000000000000000000000000000000000400000000000010400000000040200000000000000000000000000000000000000008000000100000000000000000000000000000400000080800000000000000000000000010000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000001000000000000000000000000000000000000000000000000000000000000000000001000000000000c00000000000000000
+root
+status               1 (success)
+transactionHash      0x96c838680952c51798c7324b5656244330a177f2a15f4ee99d3150bd79f06ed2
+transactionIndex     0
+type                 2
+blobGasPrice         1
+blobGasUsed
+to                   0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+
+✅ gen_and_send_signature_via_tokenBank.ts执行完成
+🔍 检查最终状态...
+📊 最终状态:
+  User1 ERC20余额: 90000000000000000000
+  TokenBank ERC20余额: 10000000000000000000
+  User1在TokenBank存款余额: 10000000000000000000
+✅ 验证结果...
+✅ User1 ERC20余额正确: 减少了10个token
+✅ TokenBank ERC20余额正确: 增加了10个token
+✅ User1在TokenBank存款余额正确: 增加了10个token
+✅ 总供应量守恒: User1减少的 = TokenBank增加的
+🎉 TokenBank depositWithPermit2测试完成!
+📝 流程总结:
+  1. User1签名授权TokenBank为spender
+  2. User1调用TokenBank.depositWithPermit2()
+  3. TokenBank调用Permit2.permitTransferFrom()
+  4. Permit2验证签名并转移token到TokenBank
+  5. TokenBank更新User1的存款余额
+  6. ✅ 通过TokenBank进行存款，无需预先approve
