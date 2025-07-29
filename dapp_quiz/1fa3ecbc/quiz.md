@@ -117,6 +117,6 @@ permitTransferFrom 签名的时候需要`spender`，调用的时候不用，而�
 
 * restart anvil
 * `initialize_3_3.sh`
-* `test_sig.sh` -> `gen_and_send_signature_direct.ts`
+* `test_sig_2.sh` -> `gen_and_send_signature_via_tokenBank.ts`
 
 5 前端部分
