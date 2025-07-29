@@ -58,8 +58,9 @@ Chain ID:       1
 
 3 更新tokenbank方法，指向permit2
 
+3.1 install permit2.
 
-4 本地部署脚本里，增加测试用户先授权permit2 max，然后签名，把签名发给TB合约的部分。
+本地部署脚本里，增加测试用户先授权permit2 max，然后签名，把签名发给TB合约的部分。
 
 
 5 前端部分

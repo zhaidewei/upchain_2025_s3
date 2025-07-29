@@ -76,6 +76,7 @@ contract TokenBank {
             ISignatureTransfer.SignatureTransferDetails({to: address(this), requestedAmount: amount});
 
         // 使用 Permit2 的 permitTransferFrom 进行签名转移
+        // 这个函数会自动将代币从 owner 转移到 address(this)
         IPermit2(PERMIT2).permitTransferFrom(permit, transferDetails, owner, signature);
 
         // 如果是新用户，添加到存款者数组
