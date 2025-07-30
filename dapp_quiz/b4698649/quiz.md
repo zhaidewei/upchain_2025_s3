@@ -15,7 +15,7 @@ admin: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, 0xac0974bec39a17e36ba4a6b4d23
 admin完成list
 3 用user1去获取代币
 使用admin给user1账户转erc20 代币
-user1，0x70997970C51812dc3A010C7d01b50e0d17dc79C8， 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+user1，0x70997970c51812dc3a010c7d01b50e0d17dc79c8， 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
 在ERC20token上获取代币
 4 user1 去使用transferWithCallback方法给admin在erc20合约里的地址转账买nft，
 
@@ -58,7 +58,7 @@ forge create --rpc-url local --account anvil-tester --password '' $ROOT_PATH/Nft
 --constructor-args "0x5FbDB2315678afecb367f032d93F642f64180aa3" "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
 #Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-#Deployed to: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+#Deployed to: 0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
 #Transaction hash: 0x343e51a94fc52dc328eb102daca8a621ad794234ec4c0774e082edf873a21152
 ```
 
@@ -69,7 +69,7 @@ import { createPublicClient, webSocket, parseAbi, formatEther, getAddress } from
 import { anvil } from 'viem/chains'
 
 // NFTMarket 合约地址 (从部署信息获取)
-const NFT_MARKET_ADDRESS = getAddress('0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0')
+const NFT_MARKET_ADDRESS = getAddress('0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0')
 
 // 定义合约ABI - 只包含事件定义
 const nftMarketAbi = parseAbi([
@@ -164,7 +164,7 @@ cast send $ERC721 \
 7 approve for NFT market
 
 ```sh
-export NFT_MARKET="0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+export NFT_MARKET="0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
 cast send $ERC721 \
   "approve(address,uint256)" \
   $NFT_MARKET \
@@ -177,7 +177,7 @@ cast send $ERC721 \
 7 在nft market 上 listing
 
 ```sh
-export NFT_MARKET="0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+export NFT_MARKET="0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
 cast send $NFT_MARKET \
   "list(uint256,uint256)" \
   1 \

@@ -6,7 +6,7 @@ export NFT=0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
 export NFTMARKET=0x610178dA211FEF7D417bC0e6FeD39F05609AD788
 export tokenBank=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 export Dewei=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
-export USER2=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+export USER2=0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 export USER3=0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
 export adminAddress=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 export ON_CHAIN_PATH=/Users/zhaidewei/upchain_2025_s3/dapp_quiz/fc66ef6c/on_chain
@@ -135,4 +135,3 @@ echo "NFTMarket ERC20 balance: $(cast call --rpc-url $anvil $ERC20 "balanceOf(ad
 echo "USER2 ERC20 balance: $(cast call --rpc-url $anvil $ERC20 "balanceOf(address)(uint256)" $USER2)" # USER2 ERC20 balance: 1000000000 [1e9]
 
 echo "=== Step 6 Complete ==="
-

@@ -3,8 +3,8 @@ import bankABI from '../abi_TokenBank.json'
 
 // Contract addresses from deployment
 export const CONTRACTS = {
-  TOKEN: '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const,
-  BANK: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512' as const,
+  TOKEN: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512' as const,
+  BANK: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0' as const,
 } as const
 
 // Contract ABIs
@@ -18,7 +18,7 @@ export const PERMIT_DOMAIN = {
   name: 'DeweiERC2612',
   version: '1.0',
   chainId: 31337, // Anvil local network
-  verifyingContract: '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const,
+  verifyingContract: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512' as const,
 } as const
 
 // Chain configuration

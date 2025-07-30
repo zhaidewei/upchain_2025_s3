@@ -7,9 +7,7 @@ import {ExtendedERC20WithData} from "../src/ExtendedERC20WithData.sol";
 import {BaseERC721} from "../src/BaseERC721.sol";
 import {NFTMarket} from "../src/NFTMarket.sol";
 
-
 contract DeployScript is Script {
-
     // Deployed contract addresses
     ExtendedERC20WithData public paymentToken;
     BaseERC721 public nft;
@@ -39,11 +37,7 @@ contract DeployScript is Script {
 
         // 2. Deploy BaseERC721
         console.log("\n2. Deploying BaseERC721...");
-        nft = new BaseERC721(
-            "TestNFT",
-            "TNFT",
-            "https://api.testnft.com/metadata/"
-        );
+        nft = new BaseERC721("TestNFT", "TNFT", "https://api.testnft.com/metadata/");
         console.log("BaseERC721 deployed at:", address(nft));
         console.log("NFT Name:", nft.name());
         console.log("NFT Symbol:", nft.symbol());
@@ -57,14 +51,14 @@ contract DeployScript is Script {
         console.log("\n4. Setting up initial state...");
 
         // Distribute tokens to test users
-        paymentToken.transfer(alice, 10000 * 10**18);
-        paymentToken.transfer(bob, 10000 * 10**18);
-        paymentToken.transfer(charlie, 5000 * 10**18);
+        paymentToken.transfer(alice, 10000 * 10 ** 18);
+        paymentToken.transfer(bob, 10000 * 10 ** 18);
+        paymentToken.transfer(charlie, 5000 * 10 ** 18);
 
         console.log("Tokens distributed:");
-        console.log("- Alice:", paymentToken.balanceOf(alice) / 10**18, "tokens");
-        console.log("- Bob:", paymentToken.balanceOf(bob) / 10**18, "tokens");
-        console.log("- Charlie:", paymentToken.balanceOf(charlie) / 10**18, "tokens");
+        console.log("- Alice:", paymentToken.balanceOf(alice) / 10 ** 18, "tokens");
+        console.log("- Bob:", paymentToken.balanceOf(bob) / 10 ** 18, "tokens");
+        console.log("- Charlie:", paymentToken.balanceOf(charlie) / 10 ** 18, "tokens");
 
         // Mint some NFTs to Alice for testing
         nft.mint(alice, 1);
@@ -87,15 +81,25 @@ contract DeployScript is Script {
 
         console.log("\n=== Next Steps ===");
         console.log("1. Alice can approve and list her NFTs:");
-        console.logString("   cast send [NFT_ADDRESS] \"approve(address,uint256)\" [MARKET_ADDRESS] 1 --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d");
-        console.logString("   cast send [MARKET_ADDRESS] \"list(uint256,uint256)\" 1 100000000000000000000 --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d");
+        console.logString(
+            "   cast send [NFT_ADDRESS] \"approve(address,uint256)\" [MARKET_ADDRESS] 1 --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
+        );
+        console.logString(
+            "   cast send [MARKET_ADDRESS] \"list(uint256,uint256)\" 1 100000000000000000000 --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
+        );
 
         console.log("\n2. Bob can buy NFT with regular method:");
-        console.logString("   cast send [TOKEN_ADDRESS] \"approve(address,uint256)\" [MARKET_ADDRESS] 100000000000000000000 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a");
-        console.logString("   cast send [MARKET_ADDRESS] \"buyNft(uint256)\" 1 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a");
+        console.logString(
+            "   cast send [TOKEN_ADDRESS] \"approve(address,uint256)\" [MARKET_ADDRESS] 100000000000000000000 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+        );
+        console.logString(
+            "   cast send [MARKET_ADDRESS] \"buyNft(uint256)\" 1 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+        );
 
         console.log("\n3. Or use transferWithCallback method:");
-        console.logString("   cast send [TOKEN_ADDRESS] \"transferWithCallback(address,uint256,bytes)\" [MARKET_ADDRESS] 100000000000000000000 0x0000000000000000000000000000000000000000000000000000000000000001 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a");
+        console.logString(
+            "   cast send [TOKEN_ADDRESS] \"transferWithCallback(address,uint256,bytes)\" [MARKET_ADDRESS] 100000000000000000000 0x0000000000000000000000000000000000000000000000000000000000000001 --private-key 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+        );
     }
 
     // Helper function to get deployment info

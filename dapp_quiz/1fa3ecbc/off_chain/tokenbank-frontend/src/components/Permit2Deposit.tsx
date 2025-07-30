@@ -40,6 +40,9 @@ function Permit2Deposit() {
   const getBlockchainTime = async (): Promise<number> => {
     try {
       console.log('🔍 Fetching blockchain time...')
+      // 'eth_getBlockByNumber' 的第二个参数表示是否返回完整交易对象数组。
+      // 传 true 会返回完整交易对象数组，传 false 只返回区块基本信息（更快）。
+      // 这里只需要区块头信息（如 timestamp），不需要交易详情，所以用 false。
       const block = await window.ethereum.request({
         method: 'eth_getBlockByNumber',
         params: ['latest', false]

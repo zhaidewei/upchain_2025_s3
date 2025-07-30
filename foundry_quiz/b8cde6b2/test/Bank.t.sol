@@ -28,27 +28,22 @@ contract BankTest is Test {
     }
 
     function test_Admin() public {
-
-        assertEq(bank.admin(), admin
-        );
+        assertEq(bank.admin(), admin);
     }
     // 断言检查存款前后用户在 Bank 合约中的存款额更新是否正确。
+
     function testFuzz_Deposit(uint256 x) public {
         // restrict the value to be greater than 0 and smaller than 100 ether
         vm.assume(x > 0 && x < 100 ether);
 
         // 检查开始前的余额
-        assertEq(
-            bank.balances(user2),
-            0);
+        assertEq(bank.balances(user2), 0);
 
         vm.prank(user2);
         bank.deposit{value: x}();
 
         // 检查存款是否正确记录
-        assertEq(
-            bank.balances(user2),
-            x);
+        assertEq(bank.balances(user2), x);
     }
 
     function test_Top3Depositors() public {

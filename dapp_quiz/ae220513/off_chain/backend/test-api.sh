@@ -32,7 +32,7 @@ curl -s "${API_BASE}/api/transfers/address?address=0xf39Fd6e51aad88F6F4ce6aB8827
 echo ""
 
 echo "6. 测试地址查询接口 (USER2)..."
-curl -s "${API_BASE}/api/transfers/address?address=0x70997970C51812dc3A010C7d01b50e0d17dc79C8" | jq .
+curl -s "${API_BASE}/api/transfers/address?address=0x70997970c51812dc3a010c7d01b50e0d17dc79c8" | jq .
 echo ""
 
 echo "7. 测试地址查询接口 (USER3)..."

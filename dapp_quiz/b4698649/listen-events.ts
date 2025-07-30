@@ -2,7 +2,7 @@ import { createPublicClient, webSocket, parseAbi, formatEther, getAddress } from
 import { anvil } from 'viem/chains'
 
 // NFTMarket 合约地址 (从部署信息获取)
-const NFT_MARKET_ADDRESS = getAddress('0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0')
+const NFT_MARKET_ADDRESS = getAddress('0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0')
 
 // 定义合约ABI - 只包含事件定义
 const nftMarketAbi = parseAbi([

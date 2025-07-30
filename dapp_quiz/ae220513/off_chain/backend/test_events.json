@@ -17,7 +17,7 @@
       "transactionHash": "0xdc7aee71040890bb9e725a1dcd2bb4de5328bc0cefc74aebc1dfa7a106750e12",
       "logIndex": 0,
       "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "to": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "to": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
       "value": "1000000000000000000000"
     },
     {
@@ -34,7 +34,7 @@
       "blockHash": "0x583e5e5511050dd29a2bcf1552e97e1085af7d1b5f0542f67421d5a8511d03d5",
       "transactionHash": "0xfe70955382b2802118525c2c06a8b6fab297547e0f376ff15be616d81a1b8915",
       "logIndex": 0,
-      "from": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "from": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
       "to": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
       "value": "500000000000000000000"
     },
@@ -44,7 +44,7 @@
       "transactionHash": "0x59ff0d33333200adc2308ce2a482e0e17ca0d07701f79cf31bcc1804db41daee",
       "logIndex": 0,
       "from": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-      "to": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "to": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
       "value": "500000000000000000000"
     }
   ]

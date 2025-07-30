@@ -88,7 +88,7 @@ const txParams = {
 //Step 5: Transfer Token
 /*
 
-TO_ADDR=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+TO_ADDR=0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 ERC20=0x264C4E0c7AD58d979e8648428791FbE06edAA23F
 OWNER=0x4DaA04d0B4316eCC9191aE07102eC08Bded637a2
 
@@ -117,4 +117,3 @@ const txParams2 = {
     const hash = await walletClient.sendRawTransaction({ serializedTransaction: signature });
     console.log('Transaction hash:', hash);
 })();
-
