@@ -78,3 +78,79 @@ Same checks to be done only once
 5. Optimize event emissions
 Remove unnecessary indexed parameters.
 ```
+
+### Results
+
+```sh
+╭--------------------------------------+-----------------+-------+--------+-------+---------╮
+| src/NFTMarket.sol:NFTMarket Contract |                 |       |        |       |         |
++===========================================================================================+
+| Deployment Cost                      | Deployment Size |       |        |       |         |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| 1481593                              | 7472            |       |        |       |         |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+|                                      |                 |       |        |       |         |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                        | Min             | Avg   | Median | Max   | # Calls |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| DOMAIN_NAME                          | 740             | 740   | 740    | 740   | 1       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| DOMAIN_SEPARATOR                     | 1336            | 1336  | 1336   | 1336  | 9       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| DOMAIN_VERSION                       | 651             | 651   | 651    | 651   | 1       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| NFT_CONTRACT                         | 592             | 592   | 592    | 592   | 1       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| PAYMENT_TOKEN                        | 570             | 570   | 570    | 570   | 1       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| getListing                           | 3566            | 3566  | 3566   | 3566  | 4       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| list                                 | 22024           | 48867 | 56688  | 56688 | 14      |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| owner                                | 2560            | 2560  | 2560   | 2560  | 1       |
+|--------------------------------------+-----------------+-------+--------+-------+---------|
+| permitBuy                            | 25060           | 52324 | 39155  | 99354 | 8       |
+╰--------------------------------------+-----------------+-------+--------+-------+---------╯
+```
+
+```sh
+Ran 17 tests for test/NFTMarket.t.sol:NFTMarketTest
+[PASS] test_Constructor() (gas: 27948)
+[PASS] test_DOMAIN_SEPARATOR() (gas: 10986)
+[PASS] test_Events() (gas: 149158)
+[PASS] test_GetListing() (gas: 78198)
+[PASS] test_GetListingNotListed() (gas: 14129)
+[PASS] test_ListNFT() (gas: 78219)
+[PASS] test_PermitBuy() (gas: 153199)
+[PASS] test_RevertWhen_ListNFTAlreadyListed() (gas: 79437)
+[PASS] test_RevertWhen_ListNFTNotApproved() (gas: 22736)
+[PASS] test_RevertWhen_ListNFTNotOwner() (gas: 18751)
+[PASS] test_RevertWhen_ListNFTZeroPrice() (gas: 45581)
+[PASS] test_RevertWhen_PermitBuyExpiredDeadline() (gas: 118327)
+[PASS] test_RevertWhen_PermitBuyInsufficientAllowance() (gas: 129747)
+[PASS] test_RevertWhen_PermitBuyInsufficientBalance() (gas: 164141)
+[PASS] test_RevertWhen_PermitBuyInvalidSignature() (gas: 126459)
+[PASS] test_RevertWhen_PermitBuyNFTNotListed() (gas: 63088)
+[PASS] test_RevertWhen_PermitBuyPriceMismatch() (gas: 126832)
+Suite result: ok. 17 passed; 0 failed; 0 skipped; finished in 25.17ms (82.99ms CPU time)
+
+Ran 1 test suite in 390.99ms (25.17ms CPU time): 17 tests passed, 0 failed, 0 skipped (17 total tests)
+test_RevertWhen_ListNFTZeroPrice() (gas: -335 (-0.730%))
+test_RevertWhen_ListNFTNotApproved() (gas: -335 (-1.452%))
+test_RevertWhen_ListNFTNotOwner() (gas: -335 (-1.755%))
+test_RevertWhen_PermitBuyNFTNotListed() (gas: -9968 (-13.644%))
+test_Constructor() (gas: -5362 (-16.097%))
+test_PermitBuy() (gas: -40098 (-20.744%))
+test_Events() (gas: -40462 (-21.338%))
+test_GetListingNotListed() (gas: -3900 (-21.632%))
+test_RevertWhen_PermitBuyInsufficientBalance() (gas: -50411 (-23.496%))
+test_RevertWhen_PermitBuyInsufficientAllowance() (gas: -50285 (-27.931%))
+test_RevertWhen_PermitBuyPriceMismatch() (gas: -50693 (-28.555%))
+test_RevertWhen_PermitBuyInvalidSignature() (gas: -50585 (-28.572%))
+test_RevertWhen_PermitBuyExpiredDeadline() (gas: -49740 (-29.595%))
+test_DOMAIN_SEPARATOR() (gas: -4860 (-30.670%))
+test_RevertWhen_ListNFTAlreadyListed() (gas: -44856 (-36.089%))
+test_ListNFT() (gas: -44382 (-36.200%))
+test_GetListing() (gas: -44382 (-36.207%))
+Overall gas change: -490989 (-25.870%)
+```
