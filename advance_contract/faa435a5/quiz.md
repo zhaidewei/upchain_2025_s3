@@ -37,9 +37,11 @@ Then there are below contracts:
 * AirdopMerkleNFTMarket: NFT Market contract
 * BaseErc721: NFT contract.
 
+Note, fixed one logic, that in ERC20 permit, same nonce is required, not nonce +1, so nonce should start from 0
+
 `forge test` must success ✅
 
-### 2 An Anvil facing initialize script
+### 2 ✅ An Anvil facing initialize script
 
 Make script `initialize_anvil.sh` to do below
 
@@ -53,7 +55,7 @@ admin user set owner to user1
 
 * Admin user deploy nft market contract, and sets relationship with erc20 and nft
 
-* Test:
+* ✅ Test:
 1. Balance in erc20
 2. Ownership of these two token.
-3. [Hold on now] generate a permit buy Typescript to simulate user 2 signs and buys nft tokenid 2 from user 1
+3. Generate a permit signature

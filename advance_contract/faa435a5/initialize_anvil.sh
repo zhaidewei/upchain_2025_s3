@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export FOUNDRY_DISABLE_NIGHTLY_WARNING=1
 echo "🚀 开始初始化 Airdop Merkle NFT Market 测试环境..."
 
 # 设置anvil账户地址变量
@@ -118,7 +118,7 @@ cast send --rpc-url http://127.0.0.1:8545 \
     --private-key $ADMIN_PRIVATE_KEY \
     $NFT_ADDRESS \
     "mint(address)" \
-    $USER1_ADDRES
+    $USER1_ADDRESS
 
 echo "✅ User1获得两个NFT"
 
@@ -132,7 +132,7 @@ ADMIN_TOKEN_BALANCE=$(cast call --rpc-url http://127.0.0.1:8545 \
     "balanceOf(address)(uint256)" \
     $ADMIN_ADDRESS)
 
-echo "  Admin在ERC20余额: $ADMIN_TOKEN_BALANCE (应该是900000000000000000000)" # 900 ether
+echo "  Admin在ERC20余额: $ADMIN_TOKEN_BALANCE (应该是890000000000000000000)" # 890 ether
 
 # 检查user1在erc20的余额
 USER1_TOKEN_BALANCE=$(cast call --rpc-url http://127.0.0.1:8545 \
@@ -162,14 +162,14 @@ echo "  User1在NFT余额: $USER1_NFT_BALANCE (应该是 2)" # 2 nft
 NFT_TOKENID_1_OWNER=$(cast call --rpc-url http://127.0.0.1:8545 \
     $NFT_ADDRESS \
     "ownerOf(uint256)(address)" \
-    1)
+    0)
 
 echo "  NFT tokenid 1 的owner: $NFT_TOKENID_1_OWNER (应该是 User1: $USER1_ADDRESS)"
 
 NFT_TOKENID_2_OWNER=$(cast call --rpc-url http://127.0.0.1:8545 \
     $NFT_ADDRESS \
     "ownerOf(uint256)(address)" \
-    2)
+    1)
 
 echo "  NFT tokenid 2 的owner: $NFT_TOKENID_2_OWNER (应该是 User1: $USER1_ADDRESS)"
 
