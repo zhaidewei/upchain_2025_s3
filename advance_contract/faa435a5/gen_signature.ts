@@ -2,13 +2,27 @@
 // https://viem.sh/docs/accounts/local/signTypedData
 import { privateKeyToAccount } from 'viem/accounts'
 
-// Get values from environment variables or use defaults
-const ERC20_CONTRACT = process.env.ERC20_CONTRACT || '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY || '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-const SPENDER_ADDRESS = process.env.SPENDER_ADDRESS || '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
-const VALUE = process.env.VALUE || '10000000000000000000'
-const DEADLINE = process.env.DEADLINE || '1753977600'
-const NONCE = process.env.NONCE || '0'
+// Parse command line arguments
+const args = process.argv.slice(2)
+const argMap: { [key: string]: string } = {}
+
+// Parse arguments in format: --key=value or -k=value
+for (const arg of args) {
+  if (arg.startsWith('--') || arg.startsWith('-')) {
+    const [key, value] = arg.replace(/^--?/, '').split('=')
+    if (key && value) {
+      argMap[key] = value
+    }
+  }
+}
+
+// Get values from command line arguments or use defaults
+const ERC20_CONTRACT = argMap.erc20 || argMap.e || '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+const OWNER_PRIVATE_KEY = argMap.owner || argMap.o || '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+const SPENDER_ADDRESS = argMap.spender || argMap.s || '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
+const VALUE = argMap.value || argMap.v || '10000000000000000000'
+const DEADLINE = argMap.deadline || argMap.d || '1753977600'
+const NONCE = argMap.nonce || argMap.n || '0'
 
 // Domain Separator
 async function main() {

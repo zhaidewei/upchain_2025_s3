@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 export FOUNDRY_DISABLE_NIGHTLY_WARNING=1
 echo "🚀 开始初始化 Airdop Merkle NFT Market 测试环境..."
 
@@ -67,10 +68,7 @@ export NFTMARKET_ADDRESS=$(forge create --rpc-url http://127.0.0.1:8545 \
     --private-key $ADMIN_PRIVATE_KEY \
     src/AirdopMerkleNFTMarket.sol:AirdopMerkleNFTMarket \
     --broadcast \
-    --constructor-args $ERC20_ADDRESS $NFT_ADDRESS "DeweiERC2612" "1.0" | grep "Deployed to:" | awk '{print $3}')
-
-# Note that, domain name and version must align with the Erc20Eip2612Compatiable contract.
-# It is used in the signarture.
+    --constructor-args $ERC20_ADDRESS $NFT_ADDRESS | grep "Deployed to:" | awk '{print $3}')
 
 echo "✅ NFTMarket合约部署到: $NFTMARKET_ADDRESS"
 
@@ -194,3 +192,116 @@ echo "👥 测试账户:"
 echo "  Admin: $ADMIN_ADDRESS"
 echo "  User1: $USER1_ADDRESS"
 echo "  User2: $USER2_ADDRESS"
+
+# 11. 测试NFTMarket合约
+echo "🔍 测试通过permit购买NFT..."
+
+# seller side, listing price, user one listing tokenid 1
+export PRICE=10000000000000000000 # 10 ether
+export TOKENID=1
+
+# First, User1 needs to approve the NFT to the market
+echo "🔐 User1授权NFT给市场合约..."
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER1_PRIVATE_KEY \
+    $NFT_ADDRESS \
+    "approve(address,uint256)" \
+    $NFTMARKET_ADDRESS \
+    $TOKENID
+
+# Then list the NFT
+echo "📝 User1上架NFT..."
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER1_PRIVATE_KEY \
+    $NFTMARKET_ADDRESS \
+    "list(uint256,uint256)" \
+    $TOKENID \
+    $PRICE
+
+# check if the nft is listed using getListing
+echo "🔍 检查NFT是否已上架..."
+LISTING_INFO=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $NFTMARKET_ADDRESS \
+    "getListing(uint256)(address,uint256,bool)" \
+    $TOKENID)
+
+echo "  上架信息: $LISTING_INFO"
+
+# buyer side, get current nonce
+CURRENT_NONCE=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $ERC20_ADDRESS \
+    "nonces(address)(uint256)" \
+    $USER2_ADDRESS)
+
+echo "  User2当前nonce: $CURRENT_NONCE"
+
+# buyer side, generate permit signature
+# buyer basically signed that he will allow nft market to use 10 token from his account.
+# this signature will be validated on erc20 contract.
+# But when calling buyNFTWithPermit,
+# the user also needs to tell nft market which tokenid to buy.
+# Then nft market will call
+# permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+# to get the allowance
+export DEADLINE=$(($(date +%s) + 86400))
+SIGNATURE_OUTPUT=$(tsx gen_signature.ts \
+  --erc20=$ERC20_ADDRESS \
+  --owner=$USER2_PRIVATE_KEY \
+  --spender=$NFTMARKET_ADDRESS \
+  --value=$PRICE \
+  --deadline=$DEADLINE \
+  --nonce=$CURRENT_NONCE)
+echo "$SIGNATURE_OUTPUT"
+echo ""
+
+# 提取签名参数（JSON 方式）
+V=$(echo "$SIGNATURE_OUTPUT" | jq -r .v)
+R=$(echo "$SIGNATURE_OUTPUT" | jq -r .r)
+S=$(echo "$SIGNATURE_OUTPUT" | jq -r .s)
+
+# Call the permitBuy function
+# The permitBuy function now:
+# 1. Validates the listing exists and price matches
+# 2. Calls PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s)
+# 3. This gives the market contract allowance to spend the buyer's tokens
+# 4. Then executes the buy logic by calling _executeBuy
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER2_PRIVATE_KEY \
+    $NFTMARKET_ADDRESS \
+    "permitBuy(uint256,uint256,uint256,uint256,uint8,bytes32,bytes32)" \
+    $TOKENID \
+    $PRICE \
+    $CURRENT_NONCE \
+    $DEADLINE \
+    $V \
+    $R \
+    $S
+
+
+# validate if the permit Buy is successful
+echo "🔍 检查permitBuy是否成功..."
+
+LISTING_INFO=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $NFTMARKET_ADDRESS \
+    "getListing(uint256)(address,uint256,bool)" \
+    $TOKENID)
+
+echo "  上架信息: $LISTING_INFO (应该是 false)"
+
+NFT_OWNER=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $NFT_ADDRESS \
+    "ownerOf(uint256)(address)" \
+    $TOKENID)
+
+echo "  NFT tokenid 1 的owner应该是 User2: $USER2_ADDRESS"
+echo "  实际owner: $NFT_OWNER"
+
+# Convert both addresses to lowercase for comparison (works in POSIX sh)
+NFT_OWNER_LC=$(echo "$NFT_OWNER" | tr '[:upper:]' '[:lower:]')
+USER2_ADDRESS_LC=$(echo "$USER2_ADDRESS" | tr '[:upper:]' '[:lower:]')
+
+if [[ "$NFT_OWNER_LC" == *"$USER2_ADDRESS_LC"* ]]; then
+    echo -e "\033[32m✅ permitBuy成功，User2已成为NFT的owner\033[0m"
+else
+    echo -e "\033[31m❌ permitBuy失败，User2不是NFT的owner，当前owner: $NFT_OWNER\033[0m"
+fi

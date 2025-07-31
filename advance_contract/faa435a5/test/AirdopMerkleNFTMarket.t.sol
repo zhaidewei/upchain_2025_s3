@@ -30,7 +30,7 @@ contract AirdopMerkleNFTMarketTest is Test {
 
         // 使用 owner 的私钥部署 AirdopMerkleNFTMarket
         vm.startPrank(owner);
-        market = new AirdopMerkleNFTMarket(address(token), address(nft), "AirdopMerkleNFTMarket", "1.0");
+        market = new AirdopMerkleNFTMarket(address(token), address(nft));
         vm.stopPrank();
 
         // 给卖家一些代币和 NFT
@@ -47,8 +47,6 @@ contract AirdopMerkleNFTMarketTest is Test {
         assertEq(address(market.PAYMENT_TOKEN()), address(token));
         assertEq(address(market.NFT_CONTRACT()), address(nft));
         assertEq(market.owner(), owner);
-        assertEq(market.domainName(), "AirdopMerkleNFTMarket");
-        assertEq(market.domainVersion(), "1.0");
     }
 
     function test_ListNFT() public {
@@ -136,28 +134,29 @@ contract AirdopMerkleNFTMarketTest is Test {
         market.list(0, 100);
         vm.stopPrank();
 
-        // 设置 permitBuy 签名
+        // 设置 permit 签名 (for ERC20 permit, not EIP712)
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        // Create permit signature for ERC20
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0, // tokenId
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100, // price
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
-
-        // 买家 approve 代币给 AirdopMerkleNFTMarket
-        vm.startPrank(buyer);
-        token.approve(address(market), 100);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         // 执行 permitBuy
-        market.permitBuy(0, 100, deadline, v, r, s);
+        vm.startPrank(buyer);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         // 验证结果
         assertEq(nft.ownerOf(0), buyer);
@@ -173,19 +172,22 @@ contract AirdopMerkleNFTMarketTest is Test {
 
     function test_RevertWhen_PermitBuyExpiredDeadline() public {
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         // 上架 NFT
         vm.startPrank(seller);
@@ -193,34 +195,34 @@ contract AirdopMerkleNFTMarketTest is Test {
         market.list(0, 100);
         vm.stopPrank();
 
-        // 买家 approve 代币
-        vm.startPrank(buyer);
-        token.approve(address(market), 100);
-
         // 时间前进超过 deadline
         vm.warp(deadline + 1);
 
+        vm.startPrank(buyer);
         vm.expectRevert("PermitBuy: expired deadline");
-        market.permitBuy(0, 100, deadline, v, r, s);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         vm.stopPrank();
     }
 
     function test_RevertWhen_PermitBuyInvalidSignature() public {
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         // 上架 NFT
         vm.startPrank(seller);
@@ -228,32 +230,32 @@ contract AirdopMerkleNFTMarketTest is Test {
         market.list(0, 100);
         vm.stopPrank();
 
-        // 买家 approve 代币
         vm.startPrank(buyer);
-        token.approve(address(market), 100);
-
-        // 使用错误的签名
-        vm.expectRevert("PermitBuy: invalid signature");
-        market.permitBuy(0, 100, deadline, v, r, bytes32(uint256(s) + 1));
+        // 使用错误的签名 - ERC20 permit will revert
+        vm.expectRevert();
+        market.permitBuy(0, 100, nonce, deadline, v, r, bytes32(uint256(s) + 1));
 
         vm.stopPrank();
     }
 
     function test_RevertWhen_PermitBuyPriceMismatch() public {
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         // 上架 NFT 但价格不同
         vm.startPrank(seller);
@@ -261,89 +263,57 @@ contract AirdopMerkleNFTMarketTest is Test {
         market.list(0, 200); // 价格是 200，但签名是 100
         vm.stopPrank();
 
-        // 买家 approve 代币
         vm.startPrank(buyer);
-        token.approve(address(market), 200);
-
         vm.expectRevert("Price mismatch");
-        market.permitBuy(0, 100, deadline, v, r, s);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         vm.stopPrank();
     }
 
     function test_RevertWhen_PermitBuyNFTNotListed() public {
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
-        // 买家 approve 代币
         vm.startPrank(buyer);
-        token.approve(address(market), 100);
-
         vm.expectRevert("NFT not listed");
-        market.permitBuy(0, 100, deadline, v, r, s);
-
-        vm.stopPrank();
-    }
-
-    function test_RevertWhen_PermitBuyInsufficientAllowance() public {
-        uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
-        bytes32 structHash = keccak256(
-            abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
-                buyer,
-                100,
-                deadline
-            )
-        );
-        bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
-
-        // 上架 NFT
-        vm.startPrank(seller);
-        nft.approve(address(market), 0);
-        market.list(0, 100);
-        vm.stopPrank();
-
-        // 买家没有 approve 足够的代币
-        vm.startPrank(buyer);
-        token.approve(address(market), 50); // 只授权 50，但需要 100
-
-        vm.expectRevert();
-        market.permitBuy(0, 100, deadline, v, r, s);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         vm.stopPrank();
     }
 
     function test_RevertWhen_PermitBuyInsufficientBalance() public {
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         // 上架 NFT
         vm.startPrank(seller);
@@ -353,29 +323,14 @@ contract AirdopMerkleNFTMarketTest is Test {
 
         // 买家余额不足
         vm.startPrank(buyer);
-        token.approve(address(market), 100);
 
         // 先转移掉大部分代币
         require(token.transfer(owner, 950), "Transfer to owner failed");
 
         vm.expectRevert();
-        market.permitBuy(0, 100, deadline, v, r, s);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         vm.stopPrank();
-    }
-
-    function test_DOMAIN_SEPARATOR() public view {
-        bytes32 expectedDomainSeparator = keccak256(
-            abi.encode(
-                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
-                keccak256(bytes("AirdopMerkleNFTMarket")),
-                keccak256(bytes("1.0")),
-                block.chainid,
-                address(market)
-            )
-        );
-
-        assertEq(market.DOMAIN_SEPARATOR(), expectedDomainSeparator);
     }
 
     // ========== 事件测试 ==========
@@ -392,26 +347,28 @@ contract AirdopMerkleNFTMarketTest is Test {
 
         // 测试 PermitBuyExecuted 事件
         uint256 deadline = block.timestamp + 3600;
-        bytes32 domainSeparator = market.DOMAIN_SEPARATOR();
+        uint256 nonce = token.nonces(buyer);
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
         bytes32 structHash = keccak256(
             abi.encode(
-                keccak256("PermitBuy(uint256 tokenId,address buyer,uint256 price,uint256 deadline)"),
-                0,
+                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
                 buyer,
+                address(market),
                 100,
+                nonce,
                 deadline
             )
         );
         bytes32 hash = keccak256(abi.encodePacked(hex"1901", domainSeparator, structHash));
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerPrivateKey, hash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(buyerPrivateKey, hash);
 
         vm.startPrank(buyer);
-        token.approve(address(market), 100);
 
         vm.expectEmit(true, true, true, true);
         emit AirdopMerkleNFTMarket.PermitBuyExecuted(0, buyer, seller, 100);
-        market.permitBuy(0, 100, deadline, v, r, s);
+        market.permitBuy(0, 100, nonce, deadline, v, r, s);
 
         vm.stopPrank();
     }

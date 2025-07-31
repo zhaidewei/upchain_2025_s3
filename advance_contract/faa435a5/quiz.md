@@ -13,9 +13,9 @@ claimNFT() : 通过默克尔树验证白名单，并利用 permitPrePay 的授�
 
 ## Analysis
 
-1. Get the base from previsou [project](https://decert.me/quests/fc66ef6c-35db-4ee7-b11d-c3b2d3fa356a)
+1. ✅ Get the base from previsou [project](https://decert.me/quests/fc66ef6c-35db-4ee7-b11d-c3b2d3fa356a)
 
-2. Add test case and initialization script.
+2. ✅ Add test case and initialization script.
 
 3. Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
 
@@ -55,7 +55,8 @@ admin user set owner to user1
 
 * Admin user deploy nft market contract, and sets relationship with erc20 and nft
 
-* ✅ Test:
-1. Balance in erc20
-2. Ownership of these two token.
-3. Generate a permit signature
+*  ✅ Test:
+1. ✅ Balance in erc20
+2. ✅ Ownership of these two token.
+3. ✅ Generate a permit signature
+4. Use this permit signature to do an NFT purchase

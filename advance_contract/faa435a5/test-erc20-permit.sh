@@ -48,8 +48,14 @@ echo "=== 步骤 2: 生成 permit 签名 ==="
 CURRENT_NONCE=$(cast call $ERC20_CONTRACT "nonces(address)(uint256)" $OWNER_ADDRESS --rpc-url http://localhost:8545)
 echo "Current nonce: $CURRENT_NONCE"
 
-# Pass environment variables to the TypeScript script
-SIGNATURE_OUTPUT=$(NONCE=$CURRENT_NONCE SPENDER_ADDRESS=$SPENDER_ADDRESS tsx gen_signature.ts)
+# Pass arguments to the TypeScript script
+SIGNATURE_OUTPUT=$(tsx gen_signature.ts \
+  --erc20=$ERC20_CONTRACT \
+  --owner=$OWNER_PRIVATE_KEY \
+  --spender=$SPENDER_ADDRESS \
+  --value=$VALUE \
+  --deadline=$DEADLINE \
+  --nonce=$CURRENT_NONCE)
 echo "$SIGNATURE_OUTPUT"
 echo ""
 
