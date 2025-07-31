@@ -66,7 +66,7 @@ Deployed the contract
 `forge create $PWD/src/esRNT.sol:esRNT --account anvil-tester --password '' --broadcast --rpc-url http://localhost:8545`
 
 ```sh
-tsx show.ts                                          ✔  10165  01:32:04
+tsx show.ts
 The total length of the array is 11
 baseSlot: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563
 userSlot: 18569430475105882587588266137607568536673111973893317399460219858819262702947
