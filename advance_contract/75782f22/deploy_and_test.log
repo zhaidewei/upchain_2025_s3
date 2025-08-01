@@ -1,0 +1,128 @@
+🚀 Deploying Meme Token Factory...
+ADMIN_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+USER1_KEY=0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+USER2_KEY=0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+📦 Deploying implementation and factory...
+ERC20_IMPL_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+📦 Deploying factory...
+FACTORY_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+📦 Deploying proxy using factory...
+
+blockHash            0x47beaaf6b346ee1bdc992302f3d6335cbe9b9a38ec82e00792845fbe5ab14e3b
+blockNumber          3
+contractAddress
+cumulativeGasUsed    276188
+effectiveGasPrice    785390810
+from                 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+gasUsed              276188
+logs                 []
+logsBloom            0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+root
+status               1 (success)
+transactionHash      0x452cb0afbf3ef45b73caf12c94d3c920c7dc5ec5eb1b35edadcd2653c572656a
+transactionIndex     0
+type                 2
+blobGasPrice         1
+blobGasUsed
+to                   0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+[2m2025-08-01T16:24:55.545560Z[0m [31mERROR[0m [2malloy_rpc_client::poller[0m[2m:[0m failed to poll [3merr[0m[2m=[0merror sending request for url (http://localhost:8545/)
+📦 Getting deployed proxy address...
+PROXY_ADDRESS=0xCafac3dD18aC6c6e92c921884f9E4176737C052c
+🧪 Testing the deployed proxy...
+Calling decimals() on proxy:
+18
+Calling name() on proxy:
+"Meme1"
+Calling symbol() on proxy:
+"MEME1"
+Calling perMint() on proxy:
+10
+Calling price() on proxy:
+100000000000 [1e11]
+Calling factory() on proxy:
+0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+Calling owner() on proxy:
+0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+Calling totalSupply() on proxy (should be 0 initially):
+0
+USER1_ADDRESS=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+USER2_ADDRESS=0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+ADMIN_ADDRESS=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+💰 Checking initial balances...
+USER1 balance:
+9999999783084482967720
+USER2 balance:
+10000000000000000000000
+ADMIN balance:
+9999997461935402854755
+🪙 Testing minting with USER2...
+USER2 mints tokens from the deployed meme token...
+Token price: 100000000000 [1e11] wei
+Token state before minting:
+Total supply: 0
+Per mint amount: 10
+Factory address: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+Expected factory: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+Attempting to mint tokens...
+✅ USER2 successfully minted tokens!
+💰 Checking balances after minting...
+USER2 token balance:
+10
+Total supply after minting:
+10
+USER2 ETH balance after minting:
+9999999917052372443229
+ADMIN ETH balance after minting (should have received 1% fee):
+9999997461936402854755
+USER1 ETH balance after minting (should have received 99% fee):
+9999999783183482967720
+🧪 Testing direct minting (should fail)...
+✅ Direct minting correctly failed:
+Error: Failed to estimate gas: server returned an error response: error code 3: execution reverted: Only factory can mint, data: "0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000154f6e6c7920666163746f72792063616e206d696e740000000000000000000000": Error("Only factory can mint")
+🧪 Testing minting from factory with correct parameters...
+Checking if factory can mint directly...
+Per mint amount: 10
+Testing direct mint call from factory...
+Factory address: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+Token factory: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+✅ Factory direct mint succeeded!
+ADMIN token balance after factory mint:
+10
+Total supply after factory mint:
+20
+🪙 Testing second mint by USER2...
+Testing mintMeme with correct parameters...
+Testing mintMeme with correct parameters...
+USER2 address: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+Token address: 0xCafac3dD18aC6c6e92c921884f9E4176737C052c
+Factory address: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+Token price: 100000000000 [1e11]
+✅ USER2 mintMeme transaction sent successfully!
+Result:
+blockHash            0x87b0ce1535cc6af58a1620f83435b19775677543feb9af640ebe99a8cbb2fd62
+blockNumber          6
+contractAddress
+cumulativeGasUsed    86039
+effectiveGasPrice    528644753
+from                 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+gasUsed              86039
+logs                 [{"address":"0xcafac3dd18ac6c6e92c921884f9e4176737c052c","topics":["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef","0x0000000000000000000000000000000000000000000000000000000000000000","0x0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc"],"data":"0x000000000000000000000000000000000000000000000000000000000000000a","blockHash":"0x87b0ce1535cc6af58a1620f83435b19775677543feb9af640ebe99a8cbb2fd62","blockNumber":"0x6","blockTimestamp":"0x688cea59","transactionHash":"0x7dc760910bd6ed72fb5133a5ebab04fc66aea9543846054afbc56ab6a726c585","transactionIndex":"0x0","logIndex":"0x0","removed":false}]
+logsBloom            0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100100000000000000000000000000008800000000000000000000000000000000000000000000000020000000000000000000800000800000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000002002000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000
+root
+status               1 (success)
+transactionHash      0x7dc760910bd6ed72fb5133a5ebab04fc66aea9543846054afbc56ab6a726c585
+transactionIndex     0
+type                 2
+blobGasPrice         1
+blobGasUsed
+to                   0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+USER2 token balance after mintMeme:
+20
+Total supply after mintMeme:
+30
+🧪 Testing error cases...
+Testing minting with wrong price (should fail):
+✅ Correctly failed with wrong price
+Testing minting from wrong factory (should fail):
+✅ Correctly failed with wrong factory
+🎉 All tests completed successfully!
