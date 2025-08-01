@@ -83,3 +83,9 @@ Do the merkel check in claimNFT
 [OpenZeppelin example](https://docs.openzeppelin.com/contracts/4.x/api/utils#Multicall)
 
 Not directly inside this quiz, but to just see what "multicall" means here.
+
+### 5 ✅  use multical
+
+Added run log to
+`initialize_and_test.log`
+`initialize_and_test_anvil.log`
