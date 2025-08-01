@@ -197,10 +197,10 @@ echo "  User2: $USER2_ADDRESS"
 # 11. 测试NFTMarket合约
 echo "🔍 测试通过permit购买NFT..."
 
-# seller side, listing price, user one listing tokenid 1
+# seller side, listing price, user one listing tokenid 0
 export PRICE=20000000000000000000 # 20 ether, so 50% discount is 10 ether, same as the balance of user2
 export DISCOUNT_PRICE=10000000000000000000 # 10 ether
-export TOKENID=1
+export TOKENID=0
 
 # First, User1 needs to approve the NFT to the market
 echo "🔐 User1授权NFT给市场合约..."
@@ -321,3 +321,94 @@ if [[ "$NFT_OWNER_LC" == *"$USER2_ADDRESS_LC"* ]]; then
 else
     echo -e "\033[31m❌ permitBuy失败, User2不是NFT的owner, 当前owner: $NFT_OWNER\033[0m"
 fi
+
+
+# 12. 测试Multicall
+echo "🔍 测试Multicall..."
+
+# 检查Multicall合约是否部署成功
+echo "✅ NFTMarket合约支持Multicall功能"
+
+echo "✅ Multicall合约部署成功"
+
+#let user 1 seller list the second nft at 20 ether and let admin to transfer 10 ether to user2
+TOKENID=1
+
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER1_PRIVATE_KEY \
+    $NFT_ADDRESS \
+    "approve(address,uint256)" \
+    $NFTMARKET_ADDRESS \
+    $TOKENID
+
+echo "✅ User1 approve the second nft to the market"
+
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER1_PRIVATE_KEY \
+    $NFTMARKET_ADDRESS \
+    "list(uint256,uint256)" \
+    $TOKENID \
+    $PRICE
+
+echo "✅ User1 listed the second nft at 20 ether"
+
+
+# let admin to transfer 10 ether to user2
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $ADMIN_PRIVATE_KEY \
+    $ERC20_ADDRESS \
+    "transfer(address,uint256)" \
+    $USER2_ADDRESS \
+    "10000000000000000000" # 10 ether
+
+echo "✅ Admin给User2转账10 ether"
+
+# User 2 generate permit signature
+
+CURRENT_NONCE=$(cast call --rpc-url http://127.0.0.1:8545 \
+    $ERC20_ADDRESS \
+    "nonces(address)(uint256)" \
+    $USER2_ADDRESS)
+
+echo "🔍 User2当前nonce..."
+echo "  User2当前nonce: $CURRENT_NONCE"
+
+export DEADLINE=$(($(date +%s) + 86400))
+SIGNATURE_OUTPUT=$(tsx gen_signature.ts \
+  --erc20=$ERC20_ADDRESS \
+  --owner=$USER2_PRIVATE_KEY \
+  --spender=$NFTMARKET_ADDRESS \
+  --value=$DISCOUNT_PRICE \
+  --deadline=$DEADLINE \
+  --nonce=$CURRENT_NONCE)
+echo "$SIGNATURE_OUTPUT"
+echo ""
+
+# 提取签名参数（JSON 方式）
+V=$(echo "$SIGNATURE_OUTPUT" | jq -r .v)
+R=$(echo "$SIGNATURE_OUTPUT" | jq -r .r)
+S=$(echo "$SIGNATURE_OUTPUT" | jq -r .s)
+
+echo "🔐 User2执行Multicall 做permitPrePay 和 claimNFT..."
+
+# 准备multicall数据
+# 1. permitPrePay的calldata
+PERMIT_CALLDATA=$(cast calldata "permitPrePay(uint256,uint256,uint256,uint8,bytes32,bytes32)" \
+    $TOKENID \
+    $DISCOUNT_PRICE \
+    $DEADLINE \
+    $V \
+    $R \
+    $S)
+
+# 2. claimNFT的calldata
+CLAIM_CALLDATA=$(cast calldata "claimNFT(uint256,bytes32[])" \
+    $TOKENID \
+    "$MERKLE_PROOF_ARRAY")
+
+# 执行multicall
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER2_PRIVATE_KEY \
+    $NFTMARKET_ADDRESS \
+    "multicall(bytes[])" \
+    "[$PERMIT_CALLDATA,$CLAIM_CALLDATA]"

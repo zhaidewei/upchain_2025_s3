@@ -17,7 +17,7 @@ claimNFT() : 通过默克尔树验证白名单，并利用 permitPrePay 的授�
 
 2. ✅ Add test case and initialization script.
 
-3. Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
+3. ✅ Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
 
 4. Get Multicall example.
 
@@ -62,18 +62,24 @@ admin user set owner to user1
 4. ✅ Use this permit signature to do an NFT purchase
 
 
-### 3. Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
+### 3. ✅ Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
 
 3.1 In local script, add a script
 
 Add a Merkel_hash value to contract, only admin can update it.
 when deploy the NFTMarket contract, update the Merkel_hash value
-Provide method to read and update the value.
+Provide method to read and update the value. (not done)
 
 Use Merkel proof to identify who is in whitelist, then can buy the nft at half price.
 
-Need to separate the
-TODO:
+3.2 ✅ refactor the contract,
 permitBuy() -> permitPrePay + claimNFT
-
 Do the merkel check in claimNFT
+
+3.3 ✅ Update the main script.
+
+### 4 Get Multicall example
+
+[OpenZeppelin example](https://docs.openzeppelin.com/contracts/4.x/api/utils#Multicall)
+
+Not directly inside this quiz, but to just see what "multicall" means here.

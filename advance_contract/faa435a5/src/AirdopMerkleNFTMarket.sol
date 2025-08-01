@@ -5,12 +5,13 @@ import {Erc20Eip2612Compatiable} from "./Erc20Eip2612Compatiable.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {Multicall} from "@openzeppelin/contracts/utils/Multicall.sol";
 
 /**
  * @title NFTMarket
  * @dev 使用扩展 ERC20 Token 进行 NFT 交易的市场合约
  */
-contract AirdopMerkleNFTMarket is Ownable {
+contract AirdopMerkleNFTMarket is Multicall, Ownable {
     // 扩展的 ERC20 代币合约
     Erc20Eip2612Compatiable public immutable PAYMENT_TOKEN;
     bytes32 public immutable merkleRoot;
@@ -100,23 +101,4 @@ contract AirdopMerkleNFTMarket is Ownable {
         listings[tokenId].active = false;
         emit NFTSold(tokenId, listing.seller, msg.sender, price);
     }
-
-    // function permitBuy(uint256 tokenId, uint256 price, uint256 _nonce, uint256 deadline, uint8 v, bytes32 r, bytes32 s
-    // )
-    //     public
-    // {
-    //     require(block.timestamp <= deadline, "PermitBuy: expired deadline");
-    //     // 验证上架信息
-    //     Listing memory listing = listings[tokenId];
-    //     require(listing.active, "NFT not listed");
-    //     require(listing.price == price, "Price mismatch");
-
-    //     // Try call the ERC20 permit method
-    //     PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s);
-
-    //     // 执行购买逻辑
-    //     _executeBuy(tokenId, msg.sender);
-
-    //     emit PermitBuyExecuted(tokenId, msg.sender, listing.seller, listing.price);
-    // }
 }
