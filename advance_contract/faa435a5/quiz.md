@@ -59,4 +59,21 @@ admin user set owner to user1
 1. ✅ Balance in erc20
 2. ✅ Ownership of these two token.
 3. ✅ Generate a permit signature
-4. Use this permit signature to do an NFT purchase
+4. ✅ Use this permit signature to do an NFT purchase
+
+
+### 3. Add Merkel tree hash value to NFTMarket contract. And require the permit buy signature contains Merkel tree hash
+
+3.1 In local script, add a script
+
+Add a Merkel_hash value to contract, only admin can update it.
+when deploy the NFTMarket contract, update the Merkel_hash value
+Provide method to read and update the value.
+
+Use Merkel proof to identify who is in whitelist, then can buy the nft at half price.
+
+Need to separate the
+TODO:
+permitBuy() -> permitPrePay + claimNFT
+
+Do the merkel check in claimNFT

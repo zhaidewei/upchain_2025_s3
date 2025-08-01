@@ -64,11 +64,12 @@ echo "✅ NFT合约部署到: $NFT_ADDRESS"
 
 # 5. 部署NFTMarket合约
 echo "🏦 部署NFTMarket合约..."
+export MERKLE_ROOT=$(tsx get_merkel_proof.ts | jq -r .root)
 export NFTMARKET_ADDRESS=$(forge create --rpc-url http://127.0.0.1:8545 \
     --private-key $ADMIN_PRIVATE_KEY \
     src/AirdopMerkleNFTMarket.sol:AirdopMerkleNFTMarket \
     --broadcast \
-    --constructor-args $ERC20_ADDRESS $NFT_ADDRESS | grep "Deployed to:" | awk '{print $3}')
+    --constructor-args $ERC20_ADDRESS $NFT_ADDRESS $MERKLE_ROOT | grep "Deployed to:" | awk '{print $3}')
 
 echo "✅ NFTMarket合约部署到: $NFTMARKET_ADDRESS"
 
@@ -197,7 +198,8 @@ echo "  User2: $USER2_ADDRESS"
 echo "🔍 测试通过permit购买NFT..."
 
 # seller side, listing price, user one listing tokenid 1
-export PRICE=10000000000000000000 # 10 ether
+export PRICE=20000000000000000000 # 20 ether, so 50% discount is 10 ether, same as the balance of user2
+export DISCOUNT_PRICE=10000000000000000000 # 10 ether
 export TOKENID=1
 
 # First, User1 needs to approve the NFT to the market
@@ -233,6 +235,7 @@ CURRENT_NONCE=$(cast call --rpc-url http://127.0.0.1:8545 \
     "nonces(address)(uint256)" \
     $USER2_ADDRESS)
 
+echo "🔍 User2当前nonce..."
 echo "  User2当前nonce: $CURRENT_NONCE"
 
 # buyer side, generate permit signature
@@ -248,7 +251,7 @@ SIGNATURE_OUTPUT=$(tsx gen_signature.ts \
   --erc20=$ERC20_ADDRESS \
   --owner=$USER2_PRIVATE_KEY \
   --spender=$NFTMARKET_ADDRESS \
-  --value=$PRICE \
+  --value=$DISCOUNT_PRICE \
   --deadline=$DEADLINE \
   --nonce=$CURRENT_NONCE)
 echo "$SIGNATURE_OUTPUT"
@@ -259,23 +262,36 @@ V=$(echo "$SIGNATURE_OUTPUT" | jq -r .v)
 R=$(echo "$SIGNATURE_OUTPUT" | jq -r .r)
 S=$(echo "$SIGNATURE_OUTPUT" | jq -r .s)
 
-# Call the permitBuy function
-# The permitBuy function now:
-# 1. Validates the listing exists and price matches
-# 2. Calls PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s)
-# 3. This gives the market contract allowance to spend the buyer's tokens
-# 4. Then executes the buy logic by calling _executeBuy
+# Call the permitPrePay function
+echo "🔐 User2执行permitPrePay..."
 cast send --rpc-url http://127.0.0.1:8545 \
     --private-key $USER2_PRIVATE_KEY \
     $NFTMARKET_ADDRESS \
-    "permitBuy(uint256,uint256,uint256,uint256,uint8,bytes32,bytes32)" \
+    "permitPrePay(uint256,uint256,uint256,uint8,bytes32,bytes32)" \
     $TOKENID \
-    $PRICE \
-    $CURRENT_NONCE \
+    $DISCOUNT_PRICE \
     $DEADLINE \
     $V \
     $R \
     $S
+
+# Generate merkle proof for User2 (since User2 is in the merkle tree)
+echo "🔍 生成User2的merkle proof..."
+MERKLE_PROOF_JSON=$(tsx get_merkel_proof.ts)
+echo "  Merkle proof JSON: $MERKLE_PROOF_JSON"
+
+# Extract proof array and format it properly for cast
+MERKLE_PROOF_ARRAY=$(echo "$MERKLE_PROOF_JSON" | jq -r '.proof | join(",")' | sed 's/^/[/; s/$/]/')
+echo "  Merkle proof array: $MERKLE_PROOF_ARRAY"
+
+# Call the claimNFT function
+echo "🎁 User2执行claimNFT..."
+cast send --rpc-url http://127.0.0.1:8545 \
+    --private-key $USER2_PRIVATE_KEY \
+    $NFTMARKET_ADDRESS \
+    "claimNFT(uint256,bytes32[])" \
+    $TOKENID \
+    "$MERKLE_PROOF_ARRAY"
 
 
 # validate if the permit Buy is successful
@@ -301,7 +317,7 @@ NFT_OWNER_LC=$(echo "$NFT_OWNER" | tr '[:upper:]' '[:lower:]')
 USER2_ADDRESS_LC=$(echo "$USER2_ADDRESS" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$NFT_OWNER_LC" == *"$USER2_ADDRESS_LC"* ]]; then
-    echo -e "\033[32m✅ permitBuy成功，User2已成为NFT的owner\033[0m"
+    echo -e "\033[32m✅ permitBuy成功, User2已成为NFT的owner\033[0m"
 else
-    echo -e "\033[31m❌ permitBuy失败，User2不是NFT的owner，当前owner: $NFT_OWNER\033[0m"
+    echo -e "\033[31m❌ permitBuy失败, User2不是NFT的owner, 当前owner: $NFT_OWNER\033[0m"
 fi

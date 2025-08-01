@@ -4,6 +4,7 @@ pragma solidity 0.8.25;
 import {Erc20Eip2612Compatiable} from "./Erc20Eip2612Compatiable.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /**
  * @title NFTMarket
@@ -12,6 +13,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract AirdopMerkleNFTMarket is Ownable {
     // 扩展的 ERC20 代币合约
     Erc20Eip2612Compatiable public immutable PAYMENT_TOKEN;
+    bytes32 public immutable merkleRoot;
 
     // NFT 合约 - 使用接口而不是具体实现
     IERC721 public immutable NFT_CONTRACT;
@@ -32,12 +34,13 @@ contract AirdopMerkleNFTMarket is Ownable {
     event PermitBuyExecuted(uint256 indexed tokenId, address indexed buyer, address indexed seller, uint256 price);
 
     // 构造函数
-    constructor(address _paymentToken, address _nftContract) Ownable(msg.sender) {
+    constructor(address _paymentToken, address _nftContract, bytes32 _merkleRoot) Ownable(msg.sender) {
         require(_paymentToken != address(0), "Payment token cannot be zero address");
         require(_nftContract != address(0), "NFT contract cannot be zero address");
 
         PAYMENT_TOKEN = Erc20Eip2612Compatiable(_paymentToken);
         NFT_CONTRACT = IERC721(_nftContract);
+        merkleRoot = _merkleRoot;
     }
 
     function list(uint256 tokenId, uint256 price) external {
@@ -73,21 +76,47 @@ contract AirdopMerkleNFTMarket is Ownable {
         return (listing.seller, listing.price, listing.active);
     }
 
-    function permitBuy(uint256 tokenId, uint256 price, uint256 _nonce, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
-        public
-    {
-        require(block.timestamp <= deadline, "PermitBuy: expired deadline");
-        // 验证上架信息
+    // Use buyer signature to approve the payment token at Erc20 contract
+    function permitPrePay(uint256 tokenId, uint256 price, uint256 deadline, uint8 v, bytes32 r, bytes32 s) public {
+        require(block.timestamp <= deadline, "permitPrePay: expired deadline");
+        PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s);
+    }
+    // After permitPrePay, try transfer the NFT to buyer, use merkleProof to check if the
+    // buyer can enjoy 50% discount
+
+    function claimNFT(uint256 tokenId, bytes32[] calldata merkleProof) public {
+        // Listing check
         Listing memory listing = listings[tokenId];
         require(listing.active, "NFT not listed");
-        require(listing.price == price, "Price mismatch");
-
-        // Try call the ERC20 permit method
-        PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s);
-
-        // 执行购买逻辑
-        _executeBuy(tokenId, msg.sender);
-
-        emit PermitBuyExecuted(tokenId, msg.sender, listing.seller, listing.price);
+        // Merkle proof check
+        bytes32 leaf = keccak256(abi.encodePacked(msg.sender, uint256(1)));
+        bool mkSuccess = MerkleProof.verify(merkleProof, merkleRoot, leaf);
+        uint256 price = mkSuccess ? listing.price / 2 : listing.price;
+        // Transfer the NFT to buyer
+        NFT_CONTRACT.transferFrom(listing.seller, msg.sender, tokenId);
+        // Transfer the payment token to seller
+        PAYMENT_TOKEN.transferFrom(msg.sender, listing.seller, price);
+        // Mark the NFT as sold
+        listings[tokenId].active = false;
+        emit NFTSold(tokenId, listing.seller, msg.sender, price);
     }
+
+    // function permitBuy(uint256 tokenId, uint256 price, uint256 _nonce, uint256 deadline, uint8 v, bytes32 r, bytes32 s
+    // )
+    //     public
+    // {
+    //     require(block.timestamp <= deadline, "PermitBuy: expired deadline");
+    //     // 验证上架信息
+    //     Listing memory listing = listings[tokenId];
+    //     require(listing.active, "NFT not listed");
+    //     require(listing.price == price, "Price mismatch");
+
+    //     // Try call the ERC20 permit method
+    //     PAYMENT_TOKEN.permit(msg.sender, address(this), price, deadline, v, r, s);
+
+    //     // 执行购买逻辑
+    //     _executeBuy(tokenId, msg.sender);
+
+    //     emit PermitBuyExecuted(tokenId, msg.sender, listing.seller, listing.price);
+    // }
 }
