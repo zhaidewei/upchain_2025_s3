@@ -1,0 +1,16 @@
+{
+  "name": "erc7702-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx demo.ts"
+  },
+  "dependencies": {
+    "viem": "^2.0.0",
+    "tsx": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
