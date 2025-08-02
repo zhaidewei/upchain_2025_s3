@@ -25,8 +25,9 @@ erc20合约：标准
 5 检查token余额，eoa在erc20上有90个，在tokenbank里10个，tokenbank在erc20里有10个。
 
 6 部署delegate合约
-7 user1 授权delegate合约
-8 user1 使用delegate合约的multicall方法，向erc20 approve 10个token，然后从tokenbank去trnasfer from 10个token
-9 检查余额
+
+7 通过脚本use_delegate.tsuser1 授权delegate合约，并且调用eoa去执行multicall
+向erc20 approve 10个token，然后从tokenbank去trnasfer from 10个token
+8 检查余额
 
 10 前端展示

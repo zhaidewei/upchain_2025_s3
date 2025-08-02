@@ -110,3 +110,17 @@ echo ""
 echo "👤 用户地址:"
 echo "ADMIN_ADDRESS=$ADMIN_ADDRESS"
 echo "USER1_ADDRESS=$USER1_ADDRESS"
+
+# 步骤6: 部署Delegator合约
+echo "📦 步骤6: 部署Delegator合约..."
+DELEGATOR_ADDRESS=$(forge create --rpc-url $RPC_URL src/Delegator.sol:Delegator --private-key $ADMIN_PRIVATE_KEY --broadcast | awk '/Deployed to:/ {print $3}')
+
+echo "DELEGATOR_ADDRESS=$DELEGATOR_ADDRESS"
+
+export DELEGATOR_ADDRESS=$DELEGATOR_ADDRESS
+export ERC20_ADDRESS=$ERC20_ADDRESS
+export TOKENBANK_ADDRESS=$TOKENBANK_ADDRESS
+export USER1_ADDRESS=$USER1_ADDRESS
+export ADMIN_ADDRESS=$ADMIN_ADDRESS
+export RPC_URL=$RPC_URL
+export CHAIN_ID=$CHAIN_ID

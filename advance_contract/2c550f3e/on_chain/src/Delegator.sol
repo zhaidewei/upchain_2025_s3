@@ -2,32 +2,27 @@
 pragma solidity ^0.8.0;
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 
 /**
- * @dev Provides a function to batch together multiple calls in a single external call.
- *
- * Consider any assumption about calldata validation performed by the sender may be violated if it's not especially
- * careful about sending transactions invoking {multicall}. For example, a relay address that filters function
- * selectors won't filter calls nested within a {multicall} operation.
- *
- * NOTE: Since 5.0.1 and 4.9.4, this contract identifies non-canonical contexts (i.e. `msg.sender` is not {Context-_msgSender}).
- * If a non-canonical context is identified, the following self `delegatecall` appends the last bytes of `msg.data`
- * to the subcall. This makes it safe to use with {ERC2771Context}. Contexts that don't affect the resolution of
- * {Context-_msgSender} are not propagated to subcalls.
+ * @dev 这个合约将被部署到 EOA 地址上，通过 EIP-7702 机制执行
+ * 它提供 multicall 功能来批量调用其他合约
  */
-contract Delegator is Context {
+contract Delegator {
     /**
-     * @dev Receives and executes a batch of function calls on this contract.
-     * @custom:oz-upgrades-unsafe-allow-reachable delegatecall
+     * @dev 批量执行多个合约调用
+     * @param targets 目标合约地址数组
+     * @param data 对应的调用数据数组
      */
-    function multicall(bytes[] calldata data) external virtual returns (bytes[] memory results) {
-        bytes memory context =
-            msg.sender == _msgSender() ? new bytes(0) : msg.data[msg.data.length - _contextSuffixLength():];
+    function multicall(address[] calldata targets, bytes[] calldata data) external returns (bytes[] memory results) {
+        require(targets.length == data.length, "Length mismatch");
 
         results = new bytes[](data.length);
         for (uint256 i = 0; i < data.length; i++) {
-            results[i] = Address.functionDelegateCall(address(this), bytes.concat(data[i], context));
+            // 使用 call 在目标合约的上下文中执行调用
+            // msg.sender 是当前合约（EOA）
+            (bool success, bytes memory result) = targets[i].call(data[i]);
+            require(success, "Call failed");
+            results[i] = result;
         }
         return results;
     }
