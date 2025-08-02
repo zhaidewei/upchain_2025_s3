@@ -232,3 +232,9 @@ eth_call
 eth_chainId
 eth_getTransactionCount
 eth_call
+eth_call
+eth_call
+eth_call
+eth_call
+eth_call
+eth_call
