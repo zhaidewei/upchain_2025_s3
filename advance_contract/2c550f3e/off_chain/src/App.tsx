@@ -1,6 +1,7 @@
 import { useAccount, useConnect, useDisconnect, useReadContract } from 'wagmi'
 import { CONTRACTS, ERC20_ABI, TOKENBANK_ABI } from './config/contracts'
 import { formatEther } from 'viem'
+import { DepositForm } from './components/DepositForm'
 
 function App() {
   const { address, isConnected } = useAccount()
@@ -81,6 +82,9 @@ function App() {
           <div style={{ marginTop: '20px' }}>
             <p><small>Delegator Contract: {CONTRACTS.DELEGATOR}</small></p>
           </div>
+
+          {/* EIP-7702 Multicall Deposit Form */}
+          <DepositForm />
         </div>
       )}
     </div>

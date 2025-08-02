@@ -8,6 +8,7 @@ A simple React frontend for the TokenBank project with MetaMask integration and 
 - Display ERC20 token balance
 - Display TokenBank balance
 - Contract address display
+- **EIP-7702 Multicall functionality** - Approve and deposit tokens in a single transaction
 - Modern UI with dark/light theme support
 
 ## Setup
@@ -38,7 +39,17 @@ npm run dev
 1. Connect your MetaMask wallet
 2. View your ERC20 token balance
 3. View your TokenBank balance
-4. See contract addresses for reference
+4. **Use EIP-7702 Multicall**: Enter an amount and click "Execute Multicall" to approve and deposit tokens in one transaction
+5. See contract addresses for reference
+
+## EIP-7702 Multicall
+
+The frontend implements EIP-7702 delegation to allow users to:
+- Approve ERC20 tokens for TokenBank in a single transaction
+- Deposit tokens to TokenBank in the same transaction
+- All through the user's EOA wallet with proper authorization
+
+This eliminates the need for separate approve and deposit transactions, improving user experience and reducing gas costs.
 
 ## Prerequisites
 
@@ -52,4 +63,4 @@ npm run dev
 - Built with React 18 + TypeScript
 - Uses Wagmi for Ethereum interactions
 - Vite for fast development and building
-- Tailwind CSS for styling (can be added if needed)
+- EIP-7702 delegation for multicall functionality
