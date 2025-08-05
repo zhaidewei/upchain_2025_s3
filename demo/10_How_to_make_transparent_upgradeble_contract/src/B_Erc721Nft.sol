@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
-contract Erc721Nft is ERC721 {
+contract Erc721Nft is ERC721Upgradeable {
     // State variables for upgradeable ERC721
     string private _name;
     string private _symbol;

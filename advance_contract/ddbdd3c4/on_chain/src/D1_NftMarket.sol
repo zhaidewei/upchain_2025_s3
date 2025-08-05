@@ -3,14 +3,15 @@ pragma solidity 0.8.25;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+
+event NFTMarketD1Initialized(address indexed paymentToken, address indexed nftContract);
 
 contract NFTMarketD1 {
-    // 扩展的 ERC20 代币合约
-    ERC20 public immutable PAYMENT_TOKEN;
+    // ERC20 代币合约
+    ERC20 public PAYMENT_TOKEN;
 
     // NFT 合约
-    ERC721 public immutable NFT_CONTRACT;
+    ERC721 public NFT_CONTRACT;
 
     // 上架信息结构
     struct Listing {
@@ -28,14 +29,23 @@ contract NFTMarketD1 {
 
     // 构造函数
     constructor(address _paymentToken, address _nftContract) {
+        // Constructor is not used in proxy pattern, but required by inheritance
+    }
+
+    // initialize
+    function initialize(address _paymentToken, address _nftContract) public {
+        require(msg.sender == address(this), "Only callable by proxy");
+        require(address(PAYMENT_TOKEN) == address(0), "Already initialized");
+        require(address(NFT_CONTRACT) == address(0), "Already initialized");
         require(_paymentToken != address(0), "Payment token cannot be zero address");
         require(_nftContract != address(0), "NFT contract cannot be zero address");
 
         PAYMENT_TOKEN = ERC20(_paymentToken);
         NFT_CONTRACT = ERC721(_nftContract);
+        emit NFTMarketD1Initialized(_paymentToken, _nftContract);
     }
 
-    function list(uint256 tokenId, uint256 price) external {
+    function list(uint256 tokenId, uint256 price) public {
         require(price > 0, "Price must be greater than 0");
         require(NFT_CONTRACT.ownerOf(tokenId) == msg.sender, "You don't own this NFT");
         require(NFT_CONTRACT.getApproved(tokenId) == address(this), "NFT not approved to market");
@@ -49,7 +59,6 @@ contract NFTMarketD1 {
 
     function buyNft(uint256 tokenId) external {
         Listing memory listing = listings[tokenId];
-        listing = listings[tokenId];
         require(listing.active, "NFT not listed");
         require(msg.sender != listing.seller, "Cannot buy your own NFT");
 
