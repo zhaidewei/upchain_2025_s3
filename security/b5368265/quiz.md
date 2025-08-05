@@ -15,9 +15,13 @@ View Annotations
 
 # 分析
 
-1首先需要打开canWithdraw 开关， 需要获取owner权限，需要修改owner。
-观察到代码里password没有初始化，所以是uint256 0
+1. 首先需要打开canWithdraw 开关， 需要获取owner权限，需要修改owner。
+观察到implementation 合约里的 password 变量是slot1，而proxy合约的slot 1是 VaultLogic logic，也就是implementation合约的地址。
+所以在proxy里校验地址的时候，password值是proxy合约的地址值。
+可以根据这个去更改owner，从而打开开关
 
-2其次需要 使用重入攻击的办法去反复调用withdraw
+2. 其次需要使用重入攻击的办法去反复调用withdraw
+这一点是利用withdraw函数里，vault先向msg sender使用call receive方法转账，然后才扣减余额。
+如果我们在receive方法处拦截，再次进入withdraw方法，就可以循环获得转账，即重入攻击。
 
-思路1，构建一个合约X，X里有receive方法，这个方法可以呼叫withdraw
+这一点没办法从EOA完成（除非7702，set code for EOA）太麻烦，我们构造一个攻击合约，合约里有这个特殊的receive方法。
