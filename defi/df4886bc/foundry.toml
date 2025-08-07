@@ -1,0 +1,12 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["../../dapp_quiz/lib"]
+# remappings = [
+#     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"
+# ]
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+[rpc_endpoints]
+sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
+arbitrum-sepolia = "https://arbitrum-sepolia.therpc.io"
+local = "http://127.0.0.1:8545"
