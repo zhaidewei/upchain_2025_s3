@@ -1,0 +1,262 @@
+start_anvil --fork
+🚀 Starting anvil with mainnet fork using INFURA_KEY ...
+Warning: This is a nightly build of Foundry. It is recommended to use the latest stable version. To mute this warning set `FOUNDRY_DISABLE_NIGHTLY_WARNING` in your environment.
+
+
+
+                             _   _
+                            (_) | |
+      __ _   _ __   __   __  _  | |
+     / _` | | '_ \  \ \ / / | | | |
+    | (_| | | | | |  \ V /  | | | |
+     \__,_| |_| |_|   \_/   |_| |_|
+
+    1.2.3-nightly (05918765cb 2025-07-15T06:03:58.328308000Z)
+    https://github.com/foundry-rs/foundry
+
+Available Accounts
+==================
+
+(0) 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000.000000000000000000 ETH)
+(1) 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (10000.000000000000000000 ETH)
+(2) 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC (10000.000000000000000000 ETH)
+(3) 0x90F79bf6EB2c4f870365E785982E1f101E93b906 (10000.000000000000000000 ETH)
+(4) 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 (10000.000000000000000000 ETH)
+(5) 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc (10000.000000000000000000 ETH)
+(6) 0x976EA74026E726554dB657fA54763abd0C3a0aa9 (10000.000000000000000000 ETH)
+(7) 0x14dC79964da2C08b23698B3D3cc7Ca32193d9955 (10000.000000000000000000 ETH)
+(8) 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f (10000.000000000000000000 ETH)
+(9) 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720 (10000.000000000000000000 ETH)
+
+Private Keys
+==================
+
+(0) 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+(1) 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+(2) 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+(3) 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
+(4) 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+(5) 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
+(6) 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+(7) 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
+(8) 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+(9) 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+
+Wallet
+==================
+Mnemonic:          test test test test test test test test test test test junk
+Derivation path:   m/44'/60'/0'/0/
+
+
+Fork
+==================
+Endpoint:       https://eth.blockrazor.xyz
+Block number:   23096035
+Block hash:     0x2fb48f4331b625521a672b8d3a8e273a25dafc7b8a1cfbddadbccaa7d7a8a9cd
+Chain ID:       1
+
+Base Fee
+==================
+
+260365689
+
+Gas Limit
+==================
+
+44956056
+
+Genesis Timestamp
+==================
+
+1754652368
+
+Genesis Number
+==================
+
+0
+
+Listening on 127.0.0.1:8545
+eth_chainId
+eth_getTransactionCount
+eth_estimateGas
+eth_feeHistory
+eth_sendRawTransaction
+eth_blockNumber
+
+    Transaction: 0xe26a922c71ebed567a5f1e5588d743c0d800211f1cc99b5f15212460c5b24e54
+    Contract created: 0x78155E681c54Da4c25B6228753EcbfF5d8C2Def8
+    Gas used: 1795725
+
+    Block Number: 23096036
+    Block Hash: 0xf498e06bd04c219a1d93bb8932347f75c514574ed76c806d532c20cba527033f
+    Block Time: "Fri, 8 Aug 2025 11:26:14 +0000"
+
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_estimateGas
+eth_feeHistory
+eth_sendRawTransaction
+eth_blockNumber
+
+    Transaction: 0xf207f9fb0cf2dc6bd0e1e98e5ed58c418df6afbfdfba87af92a2a7757dbf81d2
+    Contract created: 0x3c5eC7698538a74C15Ca01C6cbb5FD6cbbae43AC
+    Gas used: 1886013
+
+    Block Number: 23096037
+    Block Hash: 0x7204ff1b1abe4f8cdc324df8595bf648b9e05465d22ed4a3948628c0c009f240
+    Block Time: "Fri, 8 Aug 2025 11:26:14 +0000"
+
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0x2f54297b0c85bb82169b7557b676f70dd22d70d143ece31f3928a5f49a028d1a
+    Gas used: 273382
+
+    Block Number: 23096038
+    Block Hash: 0xea675269521ca20e473995e174e285513e7688e413232af7e8e43063dc8e471c
+    Block Time: "Fri, 8 Aug 2025 11:26:15 +0000"
+
+eth_blockNumber
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+eth_blockNumber
+
+    Transaction: 0xc050b63c9d3374614cd6a27b560f533d2399c1c552552a6305241d2c47bec882
+    Gas used: 49641
+
+    Block Number: 23096039
+    Block Hash: 0xe4c25d13d8ec374c7f01bc5ccdca5779af78073c21ce3a47f161a6bc4c67194a
+    Block Time: "Fri, 8 Aug 2025 11:26:15 +0000"
+
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_getBalance
+eth_getBalance
+eth_getBalance
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0x1c115d1a0b5afd0132bb9d8095080eddfc0d93ccd4450f5e0a86ed9f8d80faa1
+    Gas used: 49641
+
+    Block Number: 23096040
+    Block Hash: 0x116d77e08dd22da7c9e4c01a462b057a69bba9f6e1bceeaa34b1737b33d7a8a8
+    Block Time: "Fri, 8 Aug 2025 11:26:16 +0000"
+
+eth_blockNumber
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+eth_blockNumber
+eth_getTransactionReceipt
+eth_getBlockByNumber
+
+    Transaction: 0x26aec789e2f77e0a517ef943ee5aac29811ebcb58dbe73a4a7b089004c7665d8
+    Gas used: 2839558
+
+    Block Number: 23096041
+    Block Hash: 0xa6fb66a0d13e0d5cc6a7b48d331797512870869c335f113e2c7e8e152c655fbd
+    Block Time: "Fri, 8 Aug 2025 11:26:19 +0000"
+
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_getBalance
+eth_getBalance
+eth_getBalance
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0x24e9bc0af59108c833b1f293280528419b2fd834e89b54867c50e5289c33e048
+    Gas used: 156539
+
+    Block Number: 23096042
+    Block Hash: 0x715490ba6dd37e71bbb98c5dccb2560afaad34efb3eb5e8087a45ca82759f923
+    Block Time: "Fri, 8 Aug 2025 11:26:20 +0000"
+
+eth_blockNumber
+eth_getTransactionReceipt
+eth_getBlockByNumber
+eth_chainId
+eth_getTransactionCount
+eth_call

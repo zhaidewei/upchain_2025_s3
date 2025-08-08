@@ -2,6 +2,7 @@
 pragma solidity ^0.8.25;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {IUniswapV2Router02} from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
 contract Erc20Impl is ERC20 {
     // Invisible storage slots inherited from ERC20
@@ -55,9 +56,34 @@ contract Erc20Impl is ERC20 {
     }
 
     // Mint function for the factory to call
-    function mint(address to) external {
+    function mint(address to, uint256 amount) external {
         require(msg.sender == factory, "Only factory can mint");
-        require(totalSupply() + perMint <= type(uint256).max, "Would exceed max supply");
-        _mint(to, perMint);
+        require(totalSupply() + amount <= type(uint256).max, "Would exceed max supply");
+        _mint(to, amount);
+    }
+
+    // Buy meme tokens from Uniswap (no price comparison)
+    function buyMeme(address router) external payable {
+        require(msg.value > 0, "Must send ETH to buy tokens");
+
+        // Get WETH address from router
+        address wethAddress = IUniswapV2Router02(router).WETH();
+
+        // Calculate how many tokens we can get for the ETH sent
+        address[] memory path = new address[](2);
+        path[0] = wethAddress;
+        path[1] = address(this);
+
+        // Get the expected amount of tokens
+        uint256[] memory amounts = IUniswapV2Router02(router).getAmountsOut(msg.value, path);
+        uint256 expectedTokens = amounts[1];
+
+        // Swap ETH for tokens (no price comparison required)
+        IUniswapV2Router02(router).swapExactETHForTokens{value: msg.value}(
+            0, // min tokens (set to 0 to allow any slippage)
+            path,
+            msg.sender, // recipient
+            block.timestamp + 1 hours
+        );
     }
 }
