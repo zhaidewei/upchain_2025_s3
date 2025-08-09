@@ -1,0 +1,19 @@
+[profile.default]
+src = "src"
+out = "out"
+script = "script"
+# libs = ["lib"]
+libs = ["lib"]
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "Uniswap/v2-core/=lib/v2-core/",
+    "Uniswap/v2-periphery/=lib/v2-periphery/",
+    "@uniswap/v2-core/=lib/v2-core/",
+    "@uniswap/v2-periphery/=lib/v2-periphery/",
+    "@uniswap/lib/=lib/v2-periphery/"
+]
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+[rpc_endpoints]
+sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
+arbitrum-sepolia = "https://arbitrum-sepolia.therpc.io"
+local = "http://127.0.0.1:8545"
