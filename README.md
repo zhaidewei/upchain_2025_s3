@@ -1,159 +1,51 @@
-# upchain_2025_s3
+# upchain_2025_s7
 
-Homeworks for upchain bootcamp
+* The repo name contained a typo of s3 which I meant by s7, too late to change, so be it.
 
-## Project Overview
-This repository contains solutions and scripts for the Upchain Bootcamp, including Proof of Work (PoW) simulation, RSA encryption/signing, and related Python utilities.
+* This is a public repo containing my homeworks of the 登链社区 bootcamp of web3 held in 2025 July and August, Zhuhai, China.
 
-## Proof of Work Simulation (Quiz 1)
-The `quizs/pow.py` script demonstrates a simple proof-of-work algorithm. It searches for a nonce such that the SHA-256 hash of your nickname and the nonce starts with a specified number of leading zeros.
+* Original homeworks are from [decer.me](https://decert.me/challenge/)
 
-### Usage
-You can run the script directly with:
+## Structure
 
-```bash
-python3 quizs/pow.py -n <nickname> -z <num_zeros>
+1. Repo structure
+
+Each folder covers a topic of learning.
+
+```sh
+├── advance_contract
+├── automation
+├── cache
+├── dapp_quiz
+├── defi
+├── demo # Here I placed many small tests from the course, homeworks are complete project, but I find code snips are useful.
+├── foundry_quiz
+├── quizs # deprecated, contains first quiz
+├── security
+└── sol_quiz
 ```
 
-For example, to search for a hash with 4 leading zeros for the nickname `deweizhai`:
+2. Structure of a quiz
 
-```bash
-python3 quizs/pow.py -n deweizhai -z 4
-```
+2.1 quiz folder naming
+Each quiz folder (named after the first part of a decert me URL)/n
+`https://decert.me/challenge/1fa3ecbc-a3cd-43ae-908e-661aac97bdc0` -> `1fa3ecbc`
 
-**Default behavior** (without `-z` flag): Runs both 4 and 5 leading zeros sequentially as per original quiz requirements:
+2.2 `quiz.md` file
 
-```bash
-python3 quizs/pow.py -n deweizhai
-```
+This file contains the quiz description, url link, and the solution thought that I came up with
 
-Or use the provided Makefile target:
+2.3 (usually) a `deploy_and_test.sh` script
 
-```bash
-make qz1
-```
+This script is a E2E testing script, that starts from an empty Anvil (local chain) environment.
 
-## RSA Encryption and Signing (Quiz 2)
-The `quizs/encrypt_decrypt.py` script demonstrates RSA public-key cryptography. It can:
-- Generate RSA key pairs
-- Load existing keys from files
-- Sign messages with a private key
-- Verify signatures with a public key
+Prepare the environment like contract deployment and user actions.
 
-### Usage
-You can run the script directly with:
+It represent basically, what should be done in the quiz.
 
-```bash
-python3 quizs/encrypt_decrypt.py <message>
-```
+By using such a script, I am using semi automated TDD to speed up the quiz solving speed.
 
-Or pipe input from the PoW script:
+2.4 Srouce files
 
-```bash
-python3 quizs/pow.py -n deweizhai -z 4 | python3 quizs/encrypt_decrypt.py
-```
-
-Or use the provided Makefile targets:
-
-```bash
-make      # General pipeline execution
-make qz2  # Specific Quiz 2 requirements (POW with 4 zeros + RSA signing)
-```
-
-### Environment Variables
-The RSA script supports the following environment variables:
-- `PRIVATE_KEY_FILE`: Path to the private key file (default: 'private_key.pem')
-- `PUBLIC_KEY_FILE`: Path to the public key file (default: 'public_key.pem')
-- `KEY_SIZE`: RSA key size in bits (default: 2048)
-- `MAX_SEARCH_TIME`: Maximum time for POW search in seconds (default: 600)
-
-## Quiz 2 Complete Workflow
-The Quiz 2 implementation demonstrates the complete cryptographic workflow:
-
-1. **Proof of Work**: Find a nonce such that `SHA-256(nickname + nonce)` starts with 4 leading zeros
-2. **RSA Key Generation**: Generate or load RSA public-private key pair
-3. **Digital Signing**: Sign the `nickname + nonce` string with the private key
-4. **Signature Verification**: Verify the signature using the public key
-
-### Running Quiz 2
-```bash
-# Complete Quiz 2 workflow
-make quiz2
-
-# Manual execution
-python3 quizs/pow.py -n deweizhai -z 4 | python3 quizs/encrypt_decrypt.py
-```
-
-## Pipeline Execution
-The two scripts can be chained together to:
-1. Find a nonce that produces a hash with the required leading zeros
-2. Sign the resulting "nickname+nonce" string with RSA
-3. Verify the signature
-
-This demonstrates a complete workflow from proof-of-work to cryptographic signing.
-
-## Project Structure
-```
-quizs/
-├── pow.py              # Proof of Work implementation
-├── encrypt_decrypt.py  # RSA encryption/signing implementation
-├── utils.py           # Shared utilities (key management, crypto functions)
-└── __pycache__/       # Python cache files
-```
-
-## Code Quality
-This project uses several tools to maintain code quality:
-
-### Pre-commit Hooks
-This project uses [pre-commit](https://pre-commit.com/) to enforce Python code linting with flake8 before each commit.
-
-#### Setup
-1. Install pre-commit if you haven't already:
-   ```bash
-   pip install pre-commit
-   ```
-2. Install the git hook scripts:
-   ```bash
-   pre-commit install
-   ```
-3. Now, every commit will automatically run flake8 to check code style and quality.
-
-### Flake8 Configuration
-A `.flake8` configuration file is included to customize linting rules:
-- Line length limit is set to 120 characters
-- E501 (line too long) errors are disabled
-- Common directories are excluded from linting
-
-## Testing
-The project includes comprehensive unit tests for all utility functions.
-
-### Running Tests
-```bash
-make test
-```
-
-Or run directly:
-```bash
-cd quizs && python3 -m unittest test_utils.py -v
-```
-
-### Test Coverage
-The test suite covers:
-- **Hash Function**: Basic functionality, edge cases, unicode support
-- **Leading Zeros Detection**: Various input scenarios and edge cases
-- **RSA Functions**: Key generation, signing, verification, and error handling
-- **Key Management**: File operations, environment variables, directory creation
-- **Integration**: Complete POW to RSA workflow
-
-## Dependencies
-- `rsa`: For RSA cryptographic operations
-- `python-dotenv`: For environment variable management
-- `timeout-function-decorator`: For POW timeout functionality
-
-Install dependencies:
-```bash
-pip install rsa python-dotenv timeout-function-decorator
-```
-
-## .gitignore
-A `.gitignore` file is included to exclude Python bytecode, build artifacts, virtual environments, editor settings, and pre-commit cache/config files from version control.
+If the quiz requires to write only code on chain, then I use the root folder as a foundry project.
+Otherwise, I separate codes to `on_chain` part and `off_chain` part.
