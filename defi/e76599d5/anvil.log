@@ -1,0 +1,230 @@
+
+
+                             _   _
+                            (_) | |
+      __ _   _ __   __   __  _  | |
+     / _` | | '_ \  \ \ / / | | | |
+    | (_| | | | | |  \ V /  | | | |
+     \__,_| |_| |_|   \_/   |_| |_|
+
+    1.2.3-nightly (05918765cb 2025-07-15T06:03:58.328308000Z)
+    https://github.com/foundry-rs/foundry
+
+Available Accounts
+==================
+
+(0) 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000.000000000000000000 ETH)
+(1) 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (10000.000000000000000000 ETH)
+(2) 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC (10000.000000000000000000 ETH)
+(3) 0x90F79bf6EB2c4f870365E785982E1f101E93b906 (10000.000000000000000000 ETH)
+(4) 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 (10000.000000000000000000 ETH)
+(5) 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc (10000.000000000000000000 ETH)
+(6) 0x976EA74026E726554dB657fA54763abd0C3a0aa9 (10000.000000000000000000 ETH)
+(7) 0x14dC79964da2C08b23698B3D3cc7Ca32193d9955 (10000.000000000000000000 ETH)
+(8) 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f (10000.000000000000000000 ETH)
+(9) 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720 (10000.000000000000000000 ETH)
+
+Private Keys
+==================
+
+(0) 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+(1) 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+(2) 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+(3) 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
+(4) 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+(5) 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
+(6) 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+(7) 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
+(8) 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+(9) 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+
+Wallet
+==================
+Mnemonic:          test test test test test test test test test test test junk
+Derivation path:   m/44'/60'/0'/0/
+
+
+Chain ID
+==================
+
+31337
+
+Base Fee
+==================
+
+1000000000
+
+Gas Limit
+==================
+
+30000000
+
+Genesis Timestamp
+==================
+
+1755086062
+
+Genesis Number
+==================
+
+0
+
+Listening on 127.0.0.1:8545
+eth_chainId
+eth_getTransactionCount
+eth_estimateGas
+eth_feeHistory
+eth_sendRawTransaction
+eth_blockNumber
+
+    Transaction: 0xf59a2bfd7c24e26ac92c9b7872e08c0fcbbb09d367a3f5815c7de6a0e11007c1
+    Contract created: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+    Gas used: 1368689
+
+    Block Number: 1
+    Block Hash: 0xe1868b33d930f6e03a129b72799f0be500b0d99bde52b56e6ee4dd0f6bb9e823
+    Block Time: "Wed, 13 Aug 2025 11:54:32 +0000"
+
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_blockNumber
+eth_chainId
+eth_getTransactionCount
+eth_estimateGas
+eth_feeHistory
+eth_blockNumber
+eth_sendRawTransaction
+eth_getBlockByNumber
+
+    Transaction: 0x3b344b764aa950cfe1ef2b2b352e3b95a5bb1eebc93839d27eb6c5ea70aae034
+    Contract created: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+    Gas used: 1379259
+
+    Block Number: 2
+    Block Hash: 0xd3355f100c1ae0a06036cdbbfed090fcbe9c6ac1d208f93db4a7012da7cdcb08
+    Block Time: "Wed, 13 Aug 2025 11:54:32 +0000"
+
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0xa9865fa76539f0f82ff8bb1207fd5f909fbb5f86fd3b7a986bb7b2942aac3421
+    Gas used: 46375
+
+    Block Number: 3
+    Block Hash: 0x846c27e409299f10f425b1cf97bad00689b03452a76e4ee149113fbeeda4790d
+    Block Time: "Wed, 13 Aug 2025 11:54:32 +0000"
+
+eth_blockNumber
+eth_getTransactionReceipt
+eth_getBlockByNumber
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0xb559f5fb29561908ba66d9d565dc69291628b3042172f609288b9b8b016fc280
+    Gas used: 80935
+
+    Block Number: 4
+    Block Hash: 0x4efc69c0ea6e4aba90a5db9c7f8c3c1ae760d60b844b48654c4853e7d49c1912
+    Block Time: "Wed, 13 Aug 2025 11:54:32 +0000"
+
+eth_blockNumber
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_blockNumber
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+eth_blockNumber
+eth_getTransactionReceipt
+eth_getBlockByNumber
+
+    Transaction: 0xbaea02e87c991f33e21e1e5d748ad856c1ad0126a71ccfdfb04f0f0242f20e64
+    Gas used: 163687
+
+    Block Number: 5
+    Block Hash: 0xc22db46f85ed5b57054c601f6e91ce427a36e51d8d146852ccaeebeed0977bba
+    Block Time: "Wed, 13 Aug 2025 11:54:32 +0000"
+
+eth_getTransactionReceipt
+eth_getTransactionReceipt
+eth_blockNumber
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0x27af3a985f380550627700f95b15b60ec7102a8dd45cd49066b0a6a057589cc2
+    Gas used: 98520
+
+    Block Number: 6
+    Block Hash: 0x2cb23f39b302aa787a563f1926fd1d274a620a32052266d4709b1a2dcb20c322
+    Block Time: "Wed, 13 Aug 2025 11:54:34 +0000"
+
+eth_blockNumber
+eth_getTransactionReceipt
+eth_getBlockByNumber
+eth_blockNumber
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_feeHistory
+eth_estimateGas
+eth_sendRawTransaction
+
+    Transaction: 0x1a117fcea88f54b34813d8c1c6bf4a7c03f2fd76612151583cb3979f06a5cf4b
+    Gas used: 91726
+
+    Block Number: 7
+    Block Hash: 0xb476636aa698fffc62b263e0c47f4bb60f632a953611e022dcf1e994c503d0c7
+    Block Time: "Wed, 13 Aug 2025 11:54:35 +0000"
+
+eth_blockNumber
+eth_getBlockByNumber
+eth_getTransactionReceipt
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
+eth_chainId
+eth_getTransactionCount
+eth_call
